@@ -1,0 +1,217 @@
+#### 补充：策略 (a) — 分配律深度再解释
+
+用户提问 "策略A没看懂"，这里详细重讲。
+
+**策略 (a) 的核心**：利用分配律 $a(b+c) = ab + ac$ 将求和"推入"乘积内部，避免高维展开。
+
+---
+
+**反面：不用分配律（暴力法）**
+
+假设 $g(x_1,x_2,x_3) = f_1(x_1) \cdot f_2(x_2) \cdot f_3(x_1,x_2,x_3)$，所有变量二进制。
+
+计算 $g_1(x_1) = \sum_{x_2}\sum_{x_3} f_1(x_1) f_2(x_2) f_3(x_1,x_2,x_3)$
+
+暴力法需要枚举 $x_2$ 和 $x_3$ 的所有 $2^2=4$ 种组合，一般地 $O(|A|^{\text{求和变量数}})$，指数爆炸。
+
+---
+
+**正面：用分配律**
+
+把不依赖某些变量的因子提到求和符号外面：
+
+$$g_1(x_1) = f_1(x_1) \sum_{x_2} f_2(x_2) \sum_{x_3} f_3(x_1,x_2,x_3)$$
+
+复杂度从 $O(|A|^2)$ 降到 $O(|A|)$。
+
+**本质**：分配律让我们把**多维求和**分解为**一维求和的嵌套**。
+
+---
+#### Section II-A: Expression Trees (表达式树) — 全文翻译与解释
+
+##### 原文
+
+> **A. Expression Trees**
+>
+> In many situations (for example, when $g$ represents a joint probability mass function), we are interested in computing the marginal functions $g_i(x_i)$. We can obtain an expression for each marginal function by using (2) and exploiting the distributive law. To illustrate, we write $g_1$ from Example 1 as
+>
+> $$g_1(x_1) = f_A(x_1) \sum_{x_2}f_B(x_2) \sum_{x_3} f_C(x_1,x_2,x_3) \sum_{x_4}f_D(x_3,x_4) \sum_{x_5}f_E(x_3,x_5)$$
+>
+> or, in summary notation
+>
+> $$g_1(x_1) = f_A(x_1) \sum_{\sim\{x_1\}} \big( f_B(x_2) f_C(x_1,x_2,x_3) \sum_{\sim\{x_1,x_2\}} f_D(x_3,x_4) f_E(x_3,x_5) \big) \tag{3}$$
+>
+> Similarly, we find that
+>
+> $$g_3(x_3) = \big( \sum_{x_1}\sum_{x_2} f_A(x_1)f_B(x_2)f_C(x_1,x_2,x_3) \big) \big( \sum_{x_4} f_D(x_3,x_4) \big) \big( \sum_{x_5} f_E(x_3,x_5) \big) \tag{4}$$
+>
+> In computer science, arithmetic expressions like the right-hand sides of (3) and (4) are often represented by **ordered rooted trees** [28, Sec. 8.3], here called **expression trees**, in which internal vertices (i.e., vertices with descendants) represent arithmetic operators (e.g., addition, multiplication, negation, etc.) and leaf vertices (i.e., vertices without descendants) represent variables or constants. For example, the tree of Fig. 2 represents the expression $x(y+z)$.
+>
+> When the operators in an expression tree are restricted to those that are completely symmetric in their operands (e.g., multiplication and addition), it is unnecessary to order the vertices to avoid ambiguity in interpreting the expression represented by the tree.
+>
+> In this paper, we **extend** expression trees so that the leaf vertices represent **functions**, not just variables or constants. Sums and products in such expression trees combine their operands in the usual (pointwise) manner in which functions are added and multiplied. For example, Fig. 3(a) unambiguously represents the expression on the right-hand side of (3), and Fig. 4(a) unambiguously represents the expression on the right-hand side of (4). The operators shown in these figures are the **function product** and the **summary**, having various local functions as their arguments.
+>
+> Also shown in Figs. 3(b) and 4(b), are redrawings of the factor graph of Fig. 1 as a rooted tree with $x_1$ and $x_3$ as root vertex, respectively. This is possible because the global function defined in (2) was deliberately chosen so that the corresponding factor graph is a tree. Comparing the factor graphs with the corresponding trees representing the expression for the marginal function, it is easy to note their correspondence. This observation is simple, but **key**: when a factor graph is **cycle-free**, the factor graph not only encodes in its structure the factorization of the global function, but also **encodes arithmetic expressions** by which the marginal functions associated with the global function may be computed.
+>> Formally, as we show in Appendix A, to convert a cycle-free factor graph representing a function $g$ to the corresponding expression tree for $g_i$, draw the factor graph as a rooted tree with $x_i$ as root. Every node in the factor graph then has a clearly defined **parent node**, namely, the neighboring node through which the unique path from $x_i$ to that node must pass.
+> - Replace each **variable node** in the factor graph with a **product operator**.
+> - Replace each **factor node** in the factor graph with a **"form product and multiply by $f$"** operator, and between a factor node and its parent, insert a **summary operator**.
+>
+> These local transformations are illustrated in Fig. 5(a) for a variable node, and in Fig. 5(b) for a factor node with parent $x$.
+>
+> Trivial products (those with one or no operand) act as identity operators, or may be omitted if they are leaf nodes in the expression tree. A summary operator applied to a function with a single argument is also a trivial operation, and may be omitted.
+>
+> Applying this transformation to the tree of Fig. 3(b) yields the expression tree of Fig. 3(a), and similarly for Fig. 4. Trivial operations are indicated with dashed lines in these figures.
+
+##### 中文翻译
+
+**第一段：从 Example 1 推导边缘函数的算术表达式**
+
+> 在许多情况下（例如，当 $g$ 表示联合概率质量函数时），我们感兴趣的是计算边缘函数 $g_i(x_i)$。我们可以利用 (2) 式并借助分配律来获得每个边缘函数的表达式。为了说明，我们将 Example 1 中的 $g_1$ 写为：
+>
+> $$g_1(x_1) = f_A(x_1) \sum_{x_2}f_B(x_2) \sum_{x_3} f_C(x_1,x_2,x_3) \sum_{x_4}f_D(x_3,x_4) \sum_{x_5}f_E(x_3,x_5)$$
+>
+> 或者用 summary 记法：
+>
+> $$g_1(x_1) = f_A(x_1) \sum_{\sim\{x_1\}} \big( f_B(x_2) f_C(x_1,x_2,x_3) \sum_{\sim\{x_1,x_2\}} f_D(x_3,x_4) f_E(x_3,x_5) \big) \tag{3}$$
+>
+> 类似地，我们得到：
+>
+> $$g_3(x_3) = \big( \sum_{x_1}\sum_{x_2} f_A(x_1)f_B(x_2)f_C(x_1,x_2,x_3) \big) \big( \sum_{x_4} f_D(x_3,x_4) \big) \big( \sum_{x_5} f_E(x_3,x_5) \big) \tag{4}$$
+
+**第二段：标准表达式树的定义**
+
+> 在计算机科学中，像 (3) 和 (4) 式右侧这样的算术表达式，通常用**有序有根树**（ordered rooted trees）来表示，这里称为**表达式树**。在这种树中，内部节点（即有后代的节点）表示算术运算符（如加法、乘法、取反等），叶节点（即没有后代的节点）表示变量或常量。例如，图 2 的树表示了表达式 $x(y+z)$。
+>
+> 当表达式树中的运算符限制为其操作数完全对称的运算符（如乘法和加法）时，不需要对节点排序就能避免解释表达式时的歧义。
+**第三段：论文对表达式树的扩展**
+
+> 在本文中，我们**扩展**了表达式树，使得叶节点表示**函数**，而不仅仅是变量或常量。这种表达式树中的求和与乘积以通常的（逐点）方式组合它们的操作数，就像函数被相加和相乘一样。例如，图 3(a) 无歧义地表示了 (3) 式右侧的表达式，图 4(a) 无歧义地表示了 (4) 式右侧的表达式。这些图中显示的运算符是**函数乘积**和 **summary**，以各种局部函数作为它们的操作数。
+
+**第四段：核心论断**
+
+> 图 3(b) 和 4(b) 展示了将图 1 的因子图分别以 $x_1$ 和 $x_3$ 为根顶点重画为有根树。这是可能的，因为 (2) 式中定义的全局函数被特意选择为使相应的因子图是一棵树。比较因子图与对应的表示边缘函数表达式的树，容易注意到它们的对应关系。这个观察虽然简单，但**至关重要**：当一个因子图是**无环**时，因子图不仅在其结构中编码了全局函数的分解，还**编码了计算与全局函数相关的边缘函数的算术表达式**。
+
+**第五段：形式化转换规则**
+
+> 正式地，如我们在附录 A 中所示，要将表示函数 $g$ 的无环因子图转换为对应于 $g_i$ 的表达式树：
+> 1. 将因子图画成以 $x_i$ 为根的有根树
+> 2. 因子图中的每个节点现在都有一个明确定义的**父节点**，即从 $x_i$ 到该节点的唯一路径上必须经过的邻居节点
+> 3. **将因子图中的每个变量节点替换为乘积运算符**
+> 4. **将因子图中的每个因子节点替换为"先形成乘积再乘以 $f$"运算符，并在因子节点与其父节点之间插入一个 summary 运算符**
+>
+> 这些局部变换在图 5(a)（变量节点）和图 5(b)（因子节点，父节点为 $x$）中进行了说明。
+>
+> 平凡乘积（只有一个或没有操作数的乘积）充当恒等运算符，或者如果它们是表达式树中的叶节点，则可以省略。应用于单参数函数的 summary 运算符也是平凡操作，可以省略。
+>
+> 将这个变换应用于图 3(b) 的树得到图 3(a) 的表达式树，图 4 同理。在这些图中，平凡操作用虚线表示。
+##### 深度解释
+
+**方程 (3) 的解读** ($g_1(x_1)$ 以 $x_1$ 为根)：
+
+$$g_1(x_1) = f_A(x_1) \sum_{\sim\{x_1\}} \big( f_B(x_2) f_C(x_1,x_2,x_3) \sum_{\sim\{x_1,x_2\}} f_D(x_3,x_4) f_E(x_3,x_5) \big)$$
+
+分配律的应用路径：
+
+原始: $g = f_A \cdot f_B \cdot f_C \cdot f_D \cdot f_E$
+
+以 $x_1$ 为根组织：
+
+- $f_A(x_1)$ — 不依赖其它变量，直接提出
+- $\sum_{\sim\{x_1\}}$ — 对 $x_2,x_3,x_4,x_5$ 求和
+  - $f_B(x_2)$ — 只依赖 $x_2$
+  - $f_C(x_1,x_2,x_3)$ — 依赖 $x_1,x_2,x_3$
+  - $\sum_{\sim\{x_1,x_2\}}$ — 对 $x_4,x_5$ 求和（更深层嵌套）
+    - $f_D(x_3,x_4)$
+    - $f_E(x_3,x_5)$
+
+**关键**：论文用 $\sum_{\sim\{x_1,x_2\}} f_D f_E$ 表示对 $x_4,x_5$ 求和，因为 $f_D$ 和 $f_E$ 不依赖 $x_1$ 和 $x_2$，所以这个求和可以被推到最内层。
+
+**方程 (4) 的解读** ($g_3(x_3)$ 以 $x_3$ 为根)：
+
+$$g_3(x_3) = \big( \sum_{x_1}\sum_{x_2} f_A f_B f_C \big) \big( \sum_{x_4} f_D \big) \big( \sum_{x_5} f_E \big)$$
+
+**意义**：当以中心变量 $x_3$ 为根时，$g_3$ 分解为**三个独立子问题**的乘积，可以**并行计算**！这就是树结构的威力。
+
+---
+
+**表达式树 vs 标准定义**
+
+| 节点类型 | 标准表达式树 | 本文扩展的表达式树 |
+|:--------:|:-----------:|:-----------------:|
+| 内部节点 | 运算符 (+, x, ...) | 函数乘积、summary |
+| 叶节点 | 变量或常量 | **函数** |
+| 运算方式 | 算术运算 | **逐点 (pointwise)** 运算 |
+
+**逐点 (pointwise) 运算的含义**：
+- $(f \times g)(x) = f(x) \cdot g(x)$ — 逐点相乘
+- $(f + g)(x) = f(x) + g(x)$ — 逐点相加
+
+---
+
+**核心论断的深刻含义**
+
+> **无环因子图不仅编码了函数的分解，还编码了计算边缘函数的算术表达式。**
+
+| 因子图结构 | 对应含义 |
+|:----------:|:--------:|
+| 变量节点 $x_i$ | 乘积运算符（收集所有子树的贡献） |
+| 因子节点 $f_j$ | 乘以局部函数 + 对非根变量求和 |
+| 边 | 消息传递路径（数据流方向） |
+| 树拓扑 | 嵌套求和的层次结构 |
+
+**这就是为什么和积算法本质上是"在因子图上运行表达式树"**——消息传递过程就是在执行表达式树定义的嵌套求和与乘积。
+**形式化转换规则详解**
+
+**三步法**将无环因子图转换为表达式树：
+
+1. 以 $x_i$ 为根将因子图重画为有根树
+2. 识别每个节点的父节点（到根的唯一路径上的邻居）
+3. 应用局部替换规则
+
+**变量节点转换 (Fig. 5a)**：
+
+```
+转换前:           转换后:
+   O(x_i)           ×
+  /     \         /   \
+f_a     f_b     子_a  子_b
+```
+
+变量节点变为**乘积运算符**——将来自所有相邻因子节点的子树结果相乘。
+
+**因子节点转换 (Fig. 5b)**：
+
+```
+转换前:           转换后:
+f_j (因子)        ∑_{~{x}}
+   |                |
+   x (父变量)       ×
+                  /   \
+              子_all  f_j
+```
+
+因子节点变为：**先乘积所有子树的贡献，再乘以 $f_j$，最后对除父节点外的变量求和**。
+
+**平凡操作的省略**：
+
+| 情况 | 处理 |
+|:----:|:----:|
+| 乘积只有一个操作数 | 省略（恒等运算符） |
+| 乘积没有操作数（叶节点） | 省略 |
+| summary 只有一个参数 | 省略（不需要求和） |
+
+这些在 Fig. 3/4 中用虚线表示。
+
+---
+
+##### 本节核心洞察
+
+1. **表达式树是连接因子图和边缘函数计算表达式的桥梁**
+2. **无环因子图 ↔ 表达式树** — 两者之间存在一一对应关系
+3. **转换规则本质上定义了消息传递的计算过程**：
+   - 变量节点：收集并乘积所有入消息（= 乘积运算符）
+   - 因子节点：乘以局部函数并对非目标变量求和（= summary × 乘积）
+4. **平凡操作的省略**：在实现算法时可以跳过不必要的步骤
+5. **树结构保证精确性**：因为表达式树直接给出了全局函数边缘的闭合形式表达式，没有任何近似
+
+---
