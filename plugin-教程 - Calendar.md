@@ -1,4 +1,4 @@
-﻿---
+---
 created: 2026-07-28
 plugin-id: calendar
 plugin-name: Calendar
