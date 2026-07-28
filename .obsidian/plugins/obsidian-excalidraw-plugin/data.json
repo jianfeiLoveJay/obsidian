@@ -108,7 +108,7 @@
   "experimentalLivePreview": true,
   "fadeOutExcalidrawMarkup": false,
   "loadPropertySuggestions": false,
-  "experimentalEnableFourthFont": false,
+  "experimentalEnableFourthFont": true,
   "experimantalFourthFont": "Virgil",
   "addDummyTextElement": false,
   "zoteroCompatibility": false,
@@ -498,11 +498,6 @@
   "aiEnabled": true,
   "aiVerboseLogging": false,
   "aiProviderProfiles": {
-    "OpenAI": {
-      "provider": "openai",
-      "apiKey": "",
-      "baseURL": "https://api.openai.com/v1"
-    },
     "Anthropic": {
       "provider": "anthropic",
       "apiKey": "",
@@ -513,15 +508,25 @@
       "apiKey": "",
       "baseURL": "https://generativelanguage.googleapis.com/v1beta"
     },
-    "xAI": {
-      "provider": "xai",
+    "OpenAI": {
+      "provider": "openai",
       "apiKey": "",
-      "baseURL": "https://api.x.ai/v1"
+      "baseURL": "https://api.openai.com/v1"
     },
     "OpenAI-compatible": {
       "provider": "openai-compatible",
       "apiKey": "",
       "baseURL": "https://api.openai.com/v1"
+    },
+    "opencode go": {
+      "provider": "openai-compatible",
+      "apiKey": "ex-obf:v1:AKMmqSyvMrU4uwCpJ4sBkhyEa7kc912yfutt5VzAeIBZtRKqB5pR1E7gSF+uRLxLkAO8Td4Rnjv2M9wOmA+hMtJd6WuAT99vmRuCJ+ko7TXuWMhJ1jw=",
+      "baseURL": "https://opencode.ai/zen/go"
+    },
+    "xAI": {
+      "provider": "xai",
+      "apiKey": "",
+      "baseURL": "https://api.x.ai/v1"
     }
   },
   "aiTextModelConfigs": {
