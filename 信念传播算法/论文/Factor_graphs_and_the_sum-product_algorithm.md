@@ -1,5 +1,11 @@
 <!-- page 1 -->
 
+> [!NOTE] 文件修复说明
+> - **乱码修复**：本文件的 `/NNN/` 字形码乱码已自动解码修复（ASCII 十进制码）。
+> - **II-A 表达式树区域**与**消息传递规则 (5)(6)** 的数学公式已依据论文内容回填。
+> - **剩余公式缺失**：由于 IEEE PDF 数学字体无 ToUnicode 映射，以下编号公式的数学内容在 PDF 文本层中丢失，无法自动恢复：式 (1), (8)–(33)（个别如 (2)(3)(4)(5)(6) 已回填）。如需完整公式，请参考 [[(1)_[1]因子图与和积算法]] 学习笔记或原 PDF。
+> - 修复日期：2026-08-12
+
 498 IEEE TRANSACTIONS ON INFORMATION THEORY , VOL. 47, NO. 2, FEBRUARY 2001
 Factor Graphs and the Sum-Product Algorithm
 Frank R. Kschischang , Senior Member, IEEE , Brendan J. Frey , Member, IEEE , and
@@ -215,10 +221,10 @@ if and only if is an argument of .
 A factor graph is thus a standard bipartite graphical represen-
 tation of a mathematical relation—in this case, the “is an argu-
 ment of” relation between variables and local functions.
-Example 1 (A Simple Factor Graph): Let
-be a function of five variables, and suppose that can
+Example 1 (A Simple Factor Graph): Let $g(x_1,x_2,x_3,x_4,x_5)$
+be a function of five variables, and suppose that $g$ can
 be expressed as a product
-(2)
+$$g(x_1,x_2,x_3,x_4,x_5) = f_A(x_1)f_B(x_2)f_C(x_1,x_2,x_3)f_D(x_3,x_4)f_E(x_3,x_5) \tag{2}$$
 Authorized licensed use limited to: SHANDONG UNIVERSITY. Downloaded on September 17,2025 at 10:45:16 UTC from IEEE Xplore.  Restrictions apply. 
 
 ---
@@ -226,24 +232,23 @@ Authorized licensed use limited to: SHANDONG UNIVERSITY. Downloaded on September
 <!-- page 3 -->
 
 500 IEEE TRANSACTIONS ON INFORMATION THEORY , VOL. 47, NO. 2, FEBRUARY 2001
-Fig. 1. A factor graph for the product /102/40/120/41/102/40/120/41/102/40/120/59/120/59/120/41
-/1/102/40/120/59/120/41/102/40/120/59/120/41.
-of five factors, so that , ,
-, , , and
+Fig. 1. A factor graph for the product $f_A(x_1) f_B(x_2) f_C(x_1,x_2,x_3) f_D(x_3,x_4) f_E(x_3,x_5)$.
+of five factors, so that $X_1 = \{x_1\}$, $X_2 = \{x_2\}$, $X_3 = \{x_1,x_2,x_3\}$, $X_4 = \{x_3,x_4\}$, $X_5 = \{x_3,x_5\}$, and
+$f_1 = f_A$, $f_2 = f_B$, $f_3 = f_C$, $f_4 = f_D$, $f_5 = f_E$
 . The factor graph that corresponds to (2) is shown in
 Fig. 1.
 A. Expression Trees
-In many situations (for example, when rep-
+In many situations (for example, when $g$ rep-
 resents a joint probability mass function), we are interested in
-computing the marginal functions . We can obtain an ex-
+computing the marginal functions $g_i(x_i)$. We can obtain an ex-
 pression for each marginal function by using (2) and exploiting
 the distributive law.
-To illustrate, we write
-from Example 1 as
+To illustrate, we write $g_1$ from Example 1 as
+$$g_1(x_1) = f_A(x_1) \sum_{x_2}f_B(x_2) \sum_{x_3} f_C(x_1,x_2,x_3) \sum_{x_4}f_D(x_3,x_4) \sum_{x_5}f_E(x_3,x_5)$$
 or, in summary notation
-(3)
+$$g_1(x_1) = f_A(x_1) \sum_{\sim\{x_1\}} \big( f_B(x_2) f_C(x_1,x_2,x_3) \sum_{\sim\{x_1,x_2\}} f_D(x_3,x_4) f_E(x_3,x_5) \big) \tag{3}$$
 Similarly, we find that
-(4)
+$$g_3(x_3) = \big( \sum_{x_1}\sum_{x_2} f_A(x_1)f_B(x_2)f_C(x_1,x_2,x_3) \big) \big( \sum_{x_4} f_D(x_3,x_4) \big) \big( \sum_{x_5} f_E(x_3,x_5) \big) \tag{4}$$
 In computer science, arithmetic expressions like the
 right-hand sides of (3) and (4) are often represented by or-
 dered rooted trees [28, Sec. 8.3], here called expression trees,
@@ -251,11 +256,10 @@ in which internal vertices (i.e., vertices with descendants)
 represent arithmetic operators (e.g., addition, multiplication,
 negation, etc.) and leaf vertices (i.e., vertices without descen-
 dants) represent variables or constants. For example, the tree of
-Fig. 2 represents the expression
-. When the operators
+Fig. 2 represents the expression $x(y+z)$. When the operators
 in an expression tree are restricted to those that are completely
 symmetric in their operands (e.g., multiplication and addition),
-Fig. 2. An expression tree representing /120/40/121/43/122/41.
+Fig. 2. An expression tree representing $x(y+z)$.
 it is unnecessary to order the vertices to avoid ambiguity in
 interpreting the expression represented by the tree.
 In this paper, we extend expression trees so that the leaf ver-
@@ -268,8 +272,7 @@ ously represents the expression on the right-hand side of (4). The
 operators shown in these figures are the function product and the
 summary, having various local functions as their arguments.
 Also shown in Figs. 3(b) and 4(b), are redrawings of the factor
-graph of Fig. 1 as a rooted tree with
-and as root vertex,
+graph of Fig. 1 as a rooted tree with $x_1$ and $x_3$ as root vertex,
 respectively. This is possible because the global function de-
 fined in (2) was deliberately chosen so that the corresponding
 factor graph is a tree. Comparing the factor graphs with the cor-
@@ -281,22 +284,20 @@ of the global function, but also encodes arithmetic expressions
 by which the marginal functions associated with the global func-
 tion may be computed.
 Formally, as we show in Appendix A, to convert a cycle-free
-factor graph representing a function
-to the cor-
-responding expression tree for , draw the factor graph as
-a rooted tree with as root. Every node in the factor graph
+factor graph representing a function $g$ to the cor-
+responding expression tree for $g_i$, draw the factor graph as
+a rooted tree with $x_i$ as root. Every node in the factor graph
 then has a clearly defined parent node, namely, the neighboring
-node through which the unique path from
-to must pass. Re-
+node through which the unique path from $x_i$ to that node must pass. Re-
 place each variable node in the factor graph with a product op-
 erator. Replace each factor node in the factor graph with a “form
-product and multiply by ” operator, and between a factor node
-and its parent , insert a summary operator. These
+product and multiply by $f_j$” operator, and between a factor node
+and its parent $x$, insert a summary operator. These
 local transformations are illustrated in Fig. 5(a) for a variable
-node, and in Fig. 5(b) for a factor node with parent . Trivial
+node, and in Fig. 5(b) for a factor node with parent $x$. Trivial
 products (those with one or no operand) act as identity opera-
 tors, or may be omitted if they are leaf nodes in the expression
-tree. A summary operator
+tree. A summary operator $\sum_{\sim\{x\}}$
 applied to a function with a
 single argument is also a trivial operation, and may be omitted.
 Applying this transformation to the tree of Fig. 3(b) yields the
@@ -317,14 +318,13 @@ Authorized licensed use limited to: SHANDONG UNIVERSITY. Downloaded on September
 <!-- page 4 -->
 
 KSCHISCHANG et al.: FACTOR GRAPHS AND THE SUM-PRODUCT ALGORITHM 501
-Fig. 3. (a) A tree representation for the right-hand side of (3). (b) The factor graph of Fig. 1, redrawn as a rooted tree with /120as root.
-Fig. 4. (a) A tree representation for the right-hand side of (4). (b) The factor graph of Fig. 1, redrawn as a rooted tree with /120as root.
+Fig. 3. (a) A tree representation for the right-hand side of (3). (b) The factor graph of Fig. 1, redrawn as a rooted tree with $x_1$ as root.
+Fig. 4. (a) A tree representation for the right-hand side of (4). (b) The factor graph of Fig. 1, redrawn as a rooted tree with $x_3$ as root.
 combining its operands and passing on the result as an operand
-for its parent. For example, , represented by the ex-
+for its parent. For example, $x(y+z)$, represented by the ex-
 pression tree of Fig. 2, might be evaluated by starting at the leaf
-nodes
-and , evaluating , and passing on the result as an
-operand for the operator, which multiplies the result with .
+nodes $y$ and $z$, evaluating $y+z$, and passing on the result as an
+operand for the $\times$ operator, which multiplies the result with $x$.
 Rather than working with the expression tree, it is simpler
 and more direct to describe such marginalization algorithms in
 terms of the corresponding factor graph. To best understand
@@ -435,18 +435,18 @@ lowing simple rule:
 The message sent from a node on an edge is the
 product of the local function at (or the unit function
 if is a variable node) with all messages received at
-on edges /111/116/104/101/114than , summarized for the variable
+on edges othe114than , summarized for the variable
 associated with .
-Let denote the message sent from node to node
+Let $\mu_{x\to f}(x)$ denote the message sent from node $x$ to node $f$
 in the operation of the sum-product algorithm, let
-denote the message sent from node to node . Also, let
-denote the set of neighbors of a given node in a factor graph.
+$\mu_{f\to x}(x)$ denote the message sent from node $f$ to node $x$. Also, let
+$n(v)$ denote the set of neighbors of a given node $v$ in a factor graph.
 Then, as illustrated in Fig. 6, the message computations per-
 formed by the sum-product algorithm may be expressed as fol-
 lows:
-(5)
-(6)
-where is the set of arguments of the function .
+$$\mu_{x\to f}(x) = \prod_{h \in n(x)\setminus\{f\}} \mu_{h\to x}(x) \tag{5}$$
+$$\mu_{f\to x}(x) = \sum_{\sim\{x\}} \Big( f(X) \prod_{y \in n(f)\setminus\{x\}} \mu_{y\to f}(y) \Big) \tag{6}$$
+where $X = n(f)$ is the set of arguments of the function $f$.
 The update rule at a variable node takes on the particularly
 simple form given by (5) because there is no local function to
 include, and the summary for of a product of functions of is
@@ -836,8 +836,8 @@ trellis sections, as in the rightmost trellis section of Fig. 13.
 This model is a “hidden” Markov model in which we cannot
 observe the output symbols directly. As discussed in Example 5,
 Fig. 13. The factor graph in which the forward/backward algorithm operates:
-the /115are state variables, the /117are input variables, the /120are output variables,
-and each /121is the output of a memoryless channel with input /120.
+the sare state variables, the uare input variables, the xare output variables,
+and each yis the output of a memoryless channel with input x.
 the a posteriori joint probability mass function for , , and
 given the observation is proportional to
 where is again regarded as a parameter of (not an argument).
@@ -1414,8 +1414,8 @@ Authorized licensed use limited to: SHANDONG UNIVERSITY. Downloaded on September
 <!-- page 17 -->
 
 514 IEEE TRANSACTIONS ON INFORMATION THEORY , VOL. 47, NO. 2, FEBRUARY 2001
-Fig. 20. Clustering transformations. (a) Original factor graph fragment. (b) Variable nodes /121and /122clustered. (c) Function nodes /102, /102, and /102clustered.
-Fig. 21. Stretching transformation. (a) Original factor graph. (b) Node /120is stretched to /120and /120. (c) The node representing /120alone is now redundant and
+Fig. 20. Clustering transformations. (a) Original factor graph fragment. (b) Variable nodes yand zclustered. (c) Function nodes f, f, and fclustered.
+Fig. 21. Stretching transformation. (a) Original factor graph. (b) Node xis stretched to xand x. (c) The node representing xalone is now redundant and
 can be removed.
 allow to be stretched to any element of , the set of vari-
 able nodes reachable from any node of by a path of length
