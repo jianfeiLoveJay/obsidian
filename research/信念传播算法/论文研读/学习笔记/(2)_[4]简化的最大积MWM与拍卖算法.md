@@ -19,6 +19,21 @@ group: A Simpler Max-Product Maximum Weight Matching Algorithm and the Auction A
 
 ---
 
+## 📌 知识坐标（AI 预填）
+
+> **一句话核心**：把向量消息压成标量（O(n⁴)→O(n³)），明确 max-product 与拍卖算法（轻微修改后）等价。
+
+| 关联类型 | 论文 |
+|---------|------|
+| 🔙 前置依赖 | - [[research/信念传播算法/论文研读/学习笔记/(1)_[3]最大积BP的最大权重匹配.md|BSS 2005]]：原版 |
+| 🔜 后续延伸 | - [[research/信念传播算法/论文研读/学习笔记/(3)2008[Bayati, ..] - 最大积MWM收敛性正确性与LP对偶.md|TIT 2008]]：完整论述 |
+| 🔀 同类对比 | - [[research/信念传播算法/论文研读/学习笔记/(1)_[6]分布式异步松弛算法.md|Bertsekas 1985]]：拍卖算法本源 |
+| 📐 核心定理 | Min-sum Auction I 与 II 等价；拍卖终止匹配 = MWM（LP对偶+互补松弛） |
+
+> 💡 详细关联见 [[research/信念传播算法/论文研读/_知识关联图谱.md|知识关联图谱]] 与 [[research/信念传播算法/论文研读/_导读速览.md|导读速览]]。
+
+---
+
 ## 学习进度
 
 - [ ] 一、核心问题

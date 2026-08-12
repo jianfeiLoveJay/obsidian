@@ -19,6 +19,21 @@ group: Convergence and correctness of belief propagation for weighted min-max fl
 
 ---
 
+## 📌 知识坐标（AI 预填）
+
+> **一句话核心**：min-max BP 解加权 min-max 流：唯一最优 ⇒ n/2 轮收敛，O(n³) 完全多项式（超越已知 O(n⁶) 算法）。
+
+| 关联类型 | 论文 |
+|---------|------|
+| 🔙 前置依赖 | - [[research/信念传播算法/论文研读/学习笔记/(4)2012[Gamarnik, ..] - 最小费用网络流的BP收敛性与正确性.md|Gamarnik 2012]]：同款证明框架 |
+| 🔜 后续延伸 | - FPRAS 修改（不要求唯一性） |
+| 🔀 同类对比 | - 消息算子用 max 替代 sum（min-max 代数） |
+| 📐 核心定理 | 定理1：唯一最优 ⇒ N ≥ n/2 轮收敛；推论1：总时间 O(n³) 完全多项式 |
+
+> 💡 详细关联见 [[research/信念传播算法/论文研读/_知识关联图谱.md|知识关联图谱]] 与 [[research/信念传播算法/论文研读/_导读速览.md|导读速览]]。
+
+---
+
 ## 学习进度
 
 - [ ] 一、核心问题
