@@ -8,6 +8,3 @@ Thumbs.db
 
 # Claudian 缓存
 .claudian/
-
-# 学习日志（本地开发用，不同步）
-.learnings/
