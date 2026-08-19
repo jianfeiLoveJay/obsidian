@@ -1,0 +1,884 @@
+===== PAGE 1 =====
+7002
+rpA
+8
+]TI.sc[
+2v1018050/sc:viXra
+1
+Maximum Weight Matching via Max-Product Belief
+Propagation
+Mohsen Bayati Devavrat Shah Mayank Sharma
+Abstract
+Max-product“beliefpropagation”isaniterative,local,message-passingalgorithmforfindingthemaximumaposteriori(MAP)
+assignment of a discrete probability distribution specified by agraphical model. Despite the spectacular success of the algorithm
+in many application areas such as iterativedecoding, computer vision and combinatorial optimization which involve graphs with
+manycycles, theoretical resultsabout bothcorrectness andconvergence of thealgorithmareknown infewcases[21],[18],[23],
+[16].
+In this paper we consider the problem of finding the Maximum Weight Matching (MWM) in a weighted complete bipartite
+graph. Wedefine a probability distribution on the bipartitegraph whose MAP assignment corresponds tothe MWM. We use the
+max-productalgorithmforfindingtheMAPofthisdistributionorequivalently,theMWMonthebipartitegraph.Eventhoughthe
+underlying bipartite graph has many short cycles, we find that surprisingly, the max-product algorithm always converges to the
+correct MAP assignment aslong astheMAP assignment isunique. Weprovide abound onthe number of iterationsrequired by
+the algorithmand evaluate thecomputational cost of thealgorithm. Wefindthat for a graph of size n, thecomputational cost of
+thealgorithmscalesasO(n3),whichisthesameasthecomputationalcostofthebestknownalgorithm.Finally,weestablishthe
+precise relation between the max-product algorithm and the celebrated auction algorithm proposed by Bertsekas. This suggests
+possible connections between dual algorithm and max-product algorithm for discrete optimization problems.
+I. INTRODUCTION
+Graphical models (GM) are a powerfulmethod for representing and manipulating joint probability distributions. They have
+found major applications in several different research communities such as artificial intelligence [15], statistics [11], error-
+correcting codes [7], [10], [16] and neural networks. Two central problems in probabilistic inference over graphical models
+are those of evaluating the marginal and maximum a posteriori (MAP) probabilities, respectively. In general, calculating
+the marginal or MAP probabilities for an ensemble of random variables would require a complete specification of the joint
+probability distribution. Further, the complexity of a brute force calculation would be exponentialin the size of the ensemble.
+GMs assist in exploitingthe dependencystructure between the randomvariables, allowing for the design of efficientinference
+algorithms.
+The beliefpropagation(BP) andmax-productalgorithms[15] were proposedin orderto compute,respectively,the marginal
+and MAP probabilities efficiently. Comprehensive surveys of various formulations of BP and its generalization, the junction
+tree algorithm,can be found in [2], [23], [17]. BP-based message-passing algorithmshave been very successful in the context
+of,forexample,iterativedecodingforturbocodes,computervisionandfindingsatisfyingassignmentsforrandomk-SAT.The
+simplicity, wide scope of application and experimental success of belief propagation has attracted a lot of attention recently
+[2], [10], [14], [16], [24].
+BP (or max-product)is knownto convergeto the correctmarginal(or MAP) probabilitieson tree-likegraphs[15] or graphs
+with a single loop[1],[19]. Forgraphicalmodelswith arbitraryunderlyinggraphs,little is knownaboutthe correctnessof BP.
+Partialprogressconsistsof[21]wherethecorrectnessofBPforGaussianGMsisproved,[9]whereanattenuatedmodification
+ofBPisshowntowork,and[16]wheretheiterativeturbodecodingalgorithmbasedonBPisshowntoworkintheasymptotic
+regime with probabilistic guarantees. To the best of our knowledge, little theoretical progress has been made in resolving the
+question: Why does BP work on arbitrary graphs?
+Motivated by the objective of providing justification for the success of BP on arbitrary graphs, we focus on the application
+ofBP to thewell-knowncombinatorialoptimizationproblemof findingthe MaximumWeightMatching(MWM)in a bipartite
+graph, also known as the “Assignment Problem”. It is standard to represent combinatorialoptimization problems, like finding
+the MWM, as calculating the MAP probability on a suitably defined GM which encodes the data and constraints of the
+optimization problem. Thus, the max-product algorithm can be viewed at least as a heuristic for solving the problem. In this
+paper, we study the performance of the max-product algorithm as a method for finding the MWM on a weighted complete
+bipartite graph.
+Additionally, using the max-product algorithm for problems like finding the MWM has the potential of being an exciting
+application of BP in its own right. The assignment problem is extremely well-studied algorithmically. Attempts to find better
+MWM algorithms contributed to the development of the rich theory of network flow algorithms [8], [12]. The assignment
+problemhasbeenstudiedinvariouscontextssuchasjob-assignmentinmanufacturingsystems[8],switchschedulingalgorithms
+M. Bayati is with Department of EE at Stanford University; D. Shah is with Departments of EECS and ESD at MIT and M. Sharma is with IBM T.J.
+WatsonResearchCenter. Email:bayati@stanford.edu, devavrat@mit.edu, mxsharma@us.ibm.com.
+===== PAGE 2 =====
+2
+[13] and auction algorithms [6]. We believe that the max-product algorithm can be effectively used in high-speed switch
+scheduling where the distributed nature of the algorithm and its simplicity can be very attractive.
+The main result of this paper is to show that the max-product algorithm for MWM always finds the correct solution, as
+long as the solution is unique. Our proof is purely combinatorialand dependson the graph structure. We think that this result
+may lead to further insights in understandinghow BP algorithms work when applied to other optimization problems. The rest
+of the paper is organized as follows: In Section II, we provide the setup, define the Maximum Weight Matching problem (or
+assignment problem) and describe the max-product algorithm for finding the MWM. Section III states and proves the main
+result of this paper. Section IV-A presents a simplification of the max-productalgorithm and evaluates its computationalcost.
+Section V discusses relation between the max-product algorithm and the celebrate auction algorithm proposed by Bertsekas.
+The auction algorithm essentially solves the dual of LP relaxation for matching problem. Our result suggests possibility of
+deeper connection between max-productand dual algorithm for optimization problems. Finally, we discuss some implications
+of our results in Section VI.
+II. SETUPAND PROBLEM STATEMENT
+In this section, we first define the problem of finding the MWM in a weighted complete bipartite graph and then describe
+the max-productBP algorithm for solving it.
+A. MAXIMUM WEIGHT MATCHING
+ConsideranundirectedweightedcompletebipartitegraphK =(V ,V ,E),whereV ={α ,...,α },V ={β ,...,β }
+n,n 1 2 1 1 n 2 1 n
+and (α ,β )∈E for 1≤i,j ≤n. Let each edge (α ,β ) have weight w ∈R.
+i j i j ij
+If π = {π(1),...,π(n)} is a permutation of {1,...,n} then the collection of n edges {(α ,β ),...,(α ,β )} is
+1 π(1) n π(n)
+called a matching of K . We denote both the permutation and the corresponding matching by π. The weight of matching
+n,n
+π, denoted by W , is defined as
+π
+W = w .
+π iπ(i)
+1≤i≤n
+X
+Then, the Maximum Weight Matching (MWM), π∗, is the matching such that
+π∗ =argmax W .
+π π
+Note 1. In this paper, we always assume that the weights are such that the MWM is unique. In particular, if the weights of
+the edges are independent, continuous random variables, then with probability 1, the MWM is unique.
+Next, we model the problem of finding MWM as finding a MAP assignment in a graphical model where the joint
+probability distribution can be completely specified in terms of the product of functions that depend on at most two variables
+(nodes). For details about GMs, we urge the reader to see [11]. Now, consider the following GM defined on K : Let
+n,n
+X ,...,X ,Y ,...,Y be random variables corresponding to the vertices of K and taking values from {1,2,...,n}. Let
+1 n 1 n n,n
+their joint probability distribution, p X =(x ,...,x );Y =(y ,...,y ) , be of the form:
+1 n 1 n
+(cid:0) 1 (cid:1)
+p X,Y = ψ (x ,y ) φ (x )φ (y ), (1)
+Z
+αiβj i j αi i βi i
+i,j i
+(cid:0) (cid:1) Y Y
+where the pairwise compatibility functions, ψ (·,·), are defined as
+··
+0 r=j and s6=i
+ψ (r,s)= 0 r6=j and s=i
+αiβj
+
+1 Otherwise
+
+the potentials at the nodes, φ(·), are defined as
+· 
+φ
+αi
+(r)=ewir, φ
+βj
+(r)=ewrj, ∀ 1≤ i,j,r,s ≤ n,
+and Z is the normalizationconstant. We note that the pair-wise potentialessentially ensures that the following two constraints
+are satisfied for any(X,Y) with positiveprobability:(a) If nodeα is matchedto nodeβ (i.e X =j), thennode β must be
+i j i j
+match to node α (i.e. Y =i). (b) If node α is not matched to β (i.e. X 6=j), then node β must not be matched to node
+i j i j i j
+α (i.e. Y 6= i). These two constraints encode that the support of the above defined probability distribution is on matchings
+i j
+only.
+Claim 1: For the GM as defined above, the joint density p X =(x ,...,x ),Y =(y ,...,y ) is nonzero if and only
+1 n 1 n
+if π (X)={(α ,β ),(α ,β ),...,(α ,β )} and π (Y)={(α ,β ),(α ,β ),...,(α ,β )} are both matchings and
+α 1 x1 2 x2 n xn β (cid:0) y1 1 y2 2 yn n (cid:1)
+π α (X)=π β (Y). Further, when nonzero, they are equal to Z 1e2P i wixi.
+===== PAGE 3 =====
+3
+When, p(X,Y)>0, then the productof φ(·)’s essentially make the probability monotonefunction of the summationof edge
+·
+weights as part of the corresponding matching. Formally, we state the following claim.
+∗ ∗
+Claim 2: Let (X ,Y ) be such that
+∗ ∗
+(X ,Y )=argmax{p X,Y }.
+Then, the corresponding π (X ∗ )=π (Y ∗ ) is the MWM in K . (cid:0) (cid:1)
+α β n,n
+Claim 2 implies that finding the MWM is equivalent to finding the maximum a posteriori (MAP) assignment on the GM
+defined above. Thus, the standard max-product algorithm can be used as an iterative strategy for finding the MWM. In fact
+we show that this strategy yields the correct answer. Before proceeding further, we provide an example of the above defined
+GM for the ease of readability.
+Example 1: Consider a complete bipartite graph with n = 2. The random variables X ,i = 1,2 corresponds to the index
+i
+of β node to which α is connected under the GM. Similarly, the random variable Y ,i = 1,2 correspond to the index of α
+i i
+node to which β is connected. For example, X = 1 means that α is connected to β . The pair-wise potential function ψ
+i 1 1 1 ··
+encodes matching constraints. For example, (X ,X ;Y ,Y ) = (12;12) corresponds to the matching where α is connected
+1 2 1 2 1
+to β and α is connected to β . This is encoded (and allowed) by ψ : in this example, ψ (X ,Y ) = ψ (1,2) = 1,
+1 2 2 ·· α1β2 1 2 α1β2
+etc. On the other hand, (X ,X ;Y ,Y ) = (12;21) is not a matching as α connects to β while β connects to α . This
+1 2 1 2 1 1 1 2
+is imposed by the following: ψ (X ,Y )=ψ (1,2)= 0. We suggest the reader to go through this example in further
+α1β1 1 1 α1β1
+detail by him/herself to get familiar with the above defined GM.
+B. MAX-PRODUCT ALGORITHM FOR K
+n,n
+Now, we describe the max-product algorithm (and the equivalent min-sum algorithm) for the GM defined above. We need
+some definitions and notations before we can describe the max-productalgorithm. Consider the following.
+Definition 1: Let D ∈Rn×n and X,Y,Z ∈Rn×1. Then the operations ∗,⊙ are defined as follows:
+D∗X =Z ⇐⇒z =maxd x , ∀i, (2)
+i ij j
+j
+X ⊙Y =Z ⇐⇒z =x y , ∀i. (3)
+i i i
+For X ,...,X ∈Rn×1,
+1 m
+m
+X =X ⊙X ⊙...⊙X . (4)
+i 1 2 m
+i=1
+DefinethecompatibilitymatrixΨ
+∈Rn×Kn
+suchthatits(r,s)entryisψ (r,s),for1≤i,j ≤n.Also,letΦ ,Φ ∈
+αiβj αiβj αi βj
+Rn×1 be the following:
+Φ =[φ (1),...,φ (n)]t, Φ =[φ (1),...,φ (n)]t
+αi αi αi βj βj βj
+where At denotes transpose of a matrix A.
+Max-Product Algorithm.
+(1) Let Mk = [mk (1),mk (2),...,mk (n)]t ∈ Rn×1 denote the messages passed from α to β in the
+αi→βj αi→βj αi→βj αi→βj i j
+iteration k ≥0, for 1≤i,j ≤n. Similarly, Mk is the message vector passed from β to α in the iteration k.
+βj→αi j i
+(2) Initially k =0 and set the messages as follows. Let
+M0 =[m0 (1)...m0 (n)]t, and M0 =[m0 (1)...m0 (n)]t,
+αi→βj αi→βj αi→βj βj→αi βj→αi βj→αi
+where
+ewij if r =i
+m0 (r)= (5)
+αi→βj 1 otherwise
+(cid:26)
+ewji if r =i
+m0 (r)= (6)
+βi→αj 1 otherwise
+(cid:26)
+(3) For k ≥1, messages in iteration k are obtained from messages of iteration k−1 recursively as follows:
+Mk = Ψt ∗ ( Mk−1 )⊙Φ
+αi→βj αiβj βl→αi αi
+(cid:16) K l6=j (cid:17)
+Mk = Ψ ∗ ( Mk−1 )⊙Φ (7)
+βi→αj αjβi αl→βi βi
+(cid:16) K l6=j (cid:17)
+===== PAGE 4 =====
+4
+(4) Define the beliefs (n×1 vectors) at nodes α and β , 1≤i,j ≤n, in iteration k as follows.
+i j
+bk = Mk ⊙Φ
+αi βl→αi
+!
+αi
+l
+K
+bk = Mk ⊙Φ (8)
+βj αl→βj! βj
+l
+K
+(5) The estimated1 MWM at the end of iteration k is πk, where πk(i)=argmax {bk (j)}, for 1≤i≤n.
+1≤j≤n αi
+(6) Repeat (3)-(5) till πk converges.
+Note 2. For computational stability, it is often recommended that messages be normalized at every iteration. However, such
+normalizationdoesnotchangetheoutputofthealgorithm.Sinceweareonlyinterestedintheoreticallyanalyzingthealgorithm,
+we will ignorethe normalizationstep. Also, the messagesare usually all initialized to one. Althoughthe resultdoesn’tdepend
+on the initial values, setting them as defined above makes the analysis and formulas nicer at the end.
+C. MIN-SUM ALGORITHM FOR K
+n,n
+Themax-productandmin-sumalgorithmscanbeseentobeequivalentbyobservingthatthelogarithmfunctionismonotone
+andhencemax log(α )=log(max α ).Inordertodescribethemin-sumalgorithm,weneedtoredefineΦ ,Φ ,1≤i,j ≤
+i i i i αi βj
+n, as follows:
+Φ =[w ,...,w ]t, Φ =[w ,...,w ]t.
+αi i1 in βj 1j nj
+Now, the min-sum algorithm is exactly the same as max-productwith the equations (6), (7) and (8) replaced by:
+(a) Replace (6) by the following.
+w if r =i
+m0 (r)= ij (9)
+αi→βj 0 otherwise
+(cid:26)
+w if r =i
+m0 (r)= ji (10)
+βi→αj 0 otherwise
+(cid:26)
+(b) Replace (7) by the following.
+Mk = Ψt ∗ ( Mk−1 )+Φ
+αi→βj αiβj βl→αi αi
+(cid:16) X l6=j (cid:17)
+Mk = Ψ ∗ ( Mk−1 )+Φ (11)
+βi→αj αjβi αl→βi βi
+(cid:16) X l6=j (cid:17)
+(c) Replace (8) by the following.
+bk = ( Mk )+Φ
+αi βl→αi αi
+l
+X
+bk = ( Mk )+Φ (12)
+βj αl→βj βj
+l
+X
+Note 3. The min-sum algorithm involves only summations and subtractions compared to max-product which involves
+multiplications and divisions. Computationally, this makes the min-sum algorithm more efficient and hence very attractive.
+III. MAIN RESULT
+Now we state and prove Theorem 1, which is the main contribution of this paper. Before proceeding further, we need the
+following definitions.
+Definition 2: Let ǫ be the difference between the weights of the MWM and the second maximum weight matching; i.e.
+ǫ=W π∗ −max(W π ).
+π6=π∗
+Due to the uniqueness of the MWM, ǫ>0. Also, define w∗ =max (|w |).
+i,j ij
+Theorem 1: For any weighted complete bipartite graph K with unique maximum weight matching, the max-product or
+n,n
+min-sum algorithm when applied to the correspondingGM as defined above, convergesto the correct MAP assignmentor the
+MWM within
+⌈2nw∗
+⌉ iterations.
+ǫ
+1Notethat,asdefined,πk neednotbeamatching. Theorem1showsthatforlargeenoughk,πk isamatching andcorresponds totheMWM.
+===== PAGE 5 =====
+5
+A. PROOF OF THEOREM 1
+We first present some useful notation and definitions. Consider α , 1 ≤ i ≤ n. Let Tk be the level-k unrolled tree
+i αi
+corresponding to α , defined as follows: Tk is a weighted regular rooted tree of height k +1 with every non-leaf having
+i αi
+degree n. All nodes have labels from the set {α ,...,α ,β ,...,β } according to the following recursive rule: (a) root has
+1 n 1 n
+label α ; (b) the n children of the root α have labels β ,...,β ; and (c) the children of each non-leaf node whose parent
+i i 1 n
+has labelα (orβ ) have labelsβ ,...,β ,β ,...,β (or α ,...,α ,α ,...,α ). The edge between nodeslabeled
+r r 1 r−1 r+1 n 1 r−1 r+1 n
+α ,β in the tree is assigned weight w for 1≤i,j ≤n. Examples of such a tree for n=3 are shown in the Figure 1.
+i j ij
+Note 4. Tk is often called the level-k computation tree at node α corresponding to the GM under consideration. The
+αi i
+computation tree in general is constructed by replicating the pairwise compatibility functions ψ (r,s) and potentials
+αiβj
+φ (r),φ (s), while preserving the local connectivity of the original graph. They are constructed so that the messages
+αi βj
+received by node α after k iterations in the actual graph are equivalent to those that would be received by the root α in the
+i i
+computation tree, if the messages are passed up along the tree from the leaves to the root.
+a a
+1 1
+b
+b b 3 b
+1 2 b b 3
+1 2
+a a a a a a
+2 3 2 3 2 3
+a a a a a a
+2 3 2 3 2 3
+b 2 b 3 b 2 b 3 b 1 b 3 b 1 b 3 b 1 b 2 b 1 b 2
+(a) (b)
+Fig.1. Whenn=3(a)isT1 and(b)isT2 .
+αi αi
+A collection Λ of edges in computation tree is called a T-matching if it no two edges of Λ are adjacent in the tree (Λ is a
+matching in the computationtree) and each non-leafnodesare endpointof exactly one edge from Λ. Let tk (r) be the weight
+αi
+of maximum weight T-matching in Tk which uses the edge (α ,β ) at the root.
+αi i r
+Now, we state two important lemmas that will lead to the proof of Theorem 1. The first lemma presents an important
+characterizationofthemin-sumalgorithmwhilethesecondlemmarelatesthemaximumweightT-matchingofthecomputation
+tree and the MWM in K .
+n,n
+Lemma 1: At the end of the kth iteration of the min-sum algorithm, the belief at node α of K is precisely bk =
+i n,n αi
+[2tk (1)...2tk (n)]t.
+L α e i mma 2: I α f i π∗ is the MWM of graph K then for k > 2nw∗ ,
+n,n ǫ
+π∗(i)=argmax{tk (r)}.
+r
+αi
+That is, for k large enough, the maximum weight T-matching in T α k i chooses the edge (α i ,β π∗(i) ) at the root.
+Proof: [Theorem 1] Consider the min-sum algorithm. Let bk = [bk (1),...,bk (n)]t. Recall that πk = (πk(i)) where
+πk(i)=argmax {bk (r)}. Then, by Lemmas 1 and 2, for k > 2 α n i w∗ , πk αi =π∗. αi
+r αi ǫ
+Next, we present the proofs of Lemmas 1 and 2 in that order.
+Proof: [Lemma 1] It is known[20] that underthe min-sum(or max-product)algorithm,the vector bk correspondsto the
+αi
+correct max-marginals for the root α of the MAP assignment on the GM corresponding to Tk . The pairwise compatibility
+i αi
+functions force the MAP assignment on this tree to be a T-matching. Now, each edge has two endpoints and hence its weight
+is counted twice in the weight of T-matching.
+Next consider the jth entry of bk , bk (j). By definition, it corresponds to the MAP assignment with the value of α at
+αi αi i
+the root being j. That is, (α ,β ) edge is chosen in the tree at the root. From the above discussion, bk (j) must be equal to
+i j αi
+2tk (j).
+αi
+Proof: [Lemma 2] Assume the contrary that for some k >
+2nw∗
+,
+ǫ
+π∗(i)6=argmaxtk (r)= △ˆi, for some i. (13)
+r
+αi
+===== PAGE 6 =====
+6
+Then, letˆi=π∗(i ) for i 6=i. Let Λ be the T-matchingon Tk whose weightis tk (ˆi). We will modify Λ and find Λ′ whose
+1 1 αi αi
+weight is more than Λ and which connects (α i ,β π∗(i) ) at the root instead of (α i ,β π∗(i1) ), thus contradicting with (13).
+First note that the set of all edges of Tk whose projection in K belong to π∗ is a T-matching which we denote by Π∗.
+αi n,n
+Now consider paths P , ℓ ≥ 0 in Tk , that contain edges from Π∗ and Λ alternatively defined as follows. Let α =root α ,
+ℓ αi 0 i
+i 0 = i and P 1 =(α 0 ) be a single vertex path. Let P 2 =(β π∗(i0) ,α 0 ,β π∗(i1) ), where i 1 is such that α 0 =α i is connected to
+β π∗(i1) under Λ. For r ≥1, define P 2r+1 and P 2r+2 recursively as follows:
+P =(α ,P ,α ),
+2r+1 i−r 2r ir
+P 2r+2 =(β π∗(i−r) ,P 2r+1 ,β π∗(ir+1) )
+where α i−r is the node at level 2r to which the endpoint node β π∗(i−r+1) of path P 2r is connected to under Λ, and i r+1 is
+such that α ir at level 2r (part of P 2r+1 ) is connected to β π∗(ir+1) under Λ. Note that, by definition, such paths P ℓ for ℓ≤k
+exist since the tree Tk has k+1 levels and can support a path of length at most 2k as defined above.
+αi
+Example 2: The Figure 2(d) provides an example of such a path. The corresponding bipartite graph has n = 3 with its
+MWM shown in figure 2(a). The Figure 2(d) shows T5 , the computation tree for node α , till level k = 5. A path, P ,
+α1 1 5
+is highlighted with thick edges alternatively complete and bold (edges from Λ) and dashed (edges from Π∗). In the figure,
+P =(α ); P =(β ,α ,β ); P =(α ,β ,α ,β ,α )=(α ,P ,α ) and so on. Finally,
+1 1 2 1 1 2 3 2 1 1 2 2 3 2 2
+P =(α ,β ,α ,β ,α ,β ,α ,β ,α )=C ∪Q,
+5 1 2 2 1 1 2 2 3 3 1
+where C =(α ,β ,α ,β ,α ) is a cycle of length 4 (see Figure 2(c))and Q=(α ,β ,α ,β ,α ) is a pathof length4 (see
+1 1 1 2 2 1 1 2 2 3 3
+Figure 2(b)).
+MWM
+a 1 b 1 a 1 b 1 a 1 b 1
+a b a b a b
+2 2 2 2 2 2
+a b a b a b
+3 3 3 3 3 3
+(a) (b) (c)
+a
+1
+b b
+1 b 3
+2
+a a a a a a
+2 3 2 3 2 3
+b b b b b b b b b b b b
+2 3 2 3 1 3 1 3 1 2 1 2
+a a a a a a a a a a a a a a a a a a a a a a
+a 3 1 3 1 2 1 2 1 3 1 a 1 2 1 2 1 3 1 3 1 2 1 2
+1 3
+Start of P End of P
+k k
+(d)
+Fig.2. ConsideragraphwithMWMshownin(a).Projection ofthepathP k fork=5asshownin(d)isdecomposedto(b):pathQoflength4and(c):
+cycleC 1 oflength4.Thedashededges belongtoΠ∗ whileboldedges belongtoΛ.
+Now consider the path P of length 2k. Its edges are alternately from Λ and π∗. Let us refer to the edges of Λ as the
+k
+Λ-edges of P . Replacing the Λ-edges of P with their complement in P produces a new matching Λ′ in Tk ; this follows
+k k k αi
+from the way the paths are constructed.
+Lemma 3: The weight of T-matching Λ′ is strictly higher than that of Λ on tree Tk .
+αi
+===== PAGE 7 =====
+7
+This completes the proof of Lemma 2 since Lemma 3 shows that Λ is not the maximum weight T-matching on Tk , leading
+αi
+to a contradiction.
+Now, we provide the proof of Lemma 3.
+Proof:[Lemma3]ItsufficestoshowthatthetotalweightoftheΛ-edgesislessthanthetotalweightoftheircomplement
+in P . Consider the projection P′ of P in the graph K . P′ can be decomposed into a union of a set of simple cycles
+k k k n,n k
+{C ,C ,...,C } and at most one even length path Q of length at most 2n. Since each simple cycle has at most 2n vertices
+1 2 m
+and the length of P is 2k,
+k
+2k k
+m≥ = . (14)
+2n n
+Consider one of these simple cycles, say C . Construct the matching π′ in K as follows: (i) For α ∈ C , select edges
+s n,n l s
+incident on α that belong to Λ. Such edges exist by the property of the path P that contains C . (ii) For α ∈/ C , connect
+l k s l s
+it according to π∗, that is, add the edge (α l ,β π∗(l) ).
+Now π′ 6=π∗ by construction. Since the MWM is unique, the definition of ǫ gives us
+W π′ ≤W π∗ −ǫ.
+But, W π∗−W π′ is exactlyequalto the total weightof the Π∗-edgesof C s minusthe totalweightof the Λ-edgesof C s . Thus,
+weight of Λ-edges of C s −weight of Π∗-edges of C s = −(W π∗ −W π′) ≤ −ǫ. (15)
+Since the path Q is of even length, either the first edge or the last edge is an Λ-edge. Without loss of generality, assume it is
+the last edge. Then, let
+Q=(β π∗(ij1 ) ,α ij1 ,β π∗(ij2 ) ,...,β π∗(ijl ) ,α ijl ,β π∗(ijl+1 ) ).
+Now consider the cycle
+C =(β π∗(ij1 ) ,α ij1 ,β π∗(ij2 ) ,...,β π∗(ijl ) ,α ijl ,β π∗(ij1 ) ).
+Alternate edges of C are from the maximum weight matching π∗. Hence, using the same argument as above, we obtain
+weight of Λ-edges of Q−weight of Π∗-edges of Q = w ijr π∗(ijr+1 ) − w ijr π∗(ijr )
+1≤r≤l 1≤r≤l
+X X
+≤ −ǫ+|w ijl π∗(ij1 ) |+|w ijl π∗(ijl+1 ) |
+≤ −ǫ+2w∗. (16)
+From (14)-(16), we obtain that for T-matchings Λ′ and Λ in Tk :
+αi
+weight of Λ−weight of Λ′ ≤ −(m+1)(ǫ)+2w∗
+k
+≤ − ǫ+2w∗
+n
+< 0. (17)
+This completes the proof of Lemma 3.
+IV. COMPLEXITY
+In this section, we will analyze the complexity of the min-sum algorithm described in Section II-C. Theorem 1 suggests
+that the number of iterations required to find MWM is O
+nw∗
+. Now, in each iteration of Min-Sum algorithm each node
+ǫ
+sends a vector of size n (i.e. n numbers) to each of the (cid:16)n no (cid:17) des in the other partition. Thus, total number of messages
+exchanged in each iteration are O(n2) with each message of length n. Now, each node performs O(n) basic computational
+operations(comparison,addition) to compute each element in a message vector of size n. That is, each node performsO(n2)
+computational operations to compute a message vector in each iteration. Since each node sends n message vectors, the total
+cost is O(n3) per node or O(n4) per iteration for all nodes. Thus, total cost for O(nw∗/ǫ) iterations is O(n5w∗/ǫ).
+Thus, for fixed w∗ and ǫ, the running time of algorithm scales as O(n5). The known algorithms such as Edmond-Karp’s
+algorithm[8]orAuctionalgorithm[6]havecomplexityofO(n3).Inwhatfollows,wesimplifytheMin-Sumalgorithmsothat
+overallrunningtime of the algorithmbecomesO(n3) for fixed w∗ and ǫ. We make a note here thatEdmond-Karp’salgorithm
+is strongly polynomial (i.e. does not depend on w∗ and ǫ) while Auction algorithm’s complexity is O(n3w∗/ǫ).
+===== PAGE 8 =====
+8
+A. SIMPLIFIED MIN-SUM ALGORITHM FOR K
+n,n
+We first presentthe algorithmand show that it is exactlythe same as Min-Sumalgorithm.Later, we analyze the complexity
+of the algorithm.
+Simplified Min-Sum Algorithm.
+(1) UnlikeMin-Sumalgorithm,noweachα sendsa numberto β andvice-versa.Letthe message fromα to β in iteration
+i j i j
+k be denoted as
+mˆk
+αi→βj
+Similarly, the messages from β to α in iteration k be denoted as
+j i
+mˆk
+βj→αi
+(2) Initially k =0 and set the messages as follows.
+mˆ0 =w
+αi→βj ij
+Similarly,
+mˆ0 =w
+βj→αi ij
+(3) For k ≥1, messages in iteration k are obtained from messages of iteration k−1 recursively as follows:
+mˆk = w −maxmˆk−1 ,
+αi→βj ij
+ℓ6=j
+βℓ→αi
+mˆk = w −maxmˆk−1 (18)
+βj→αi ij
+ℓ6=i
+αℓ→βj
+(4) The estimated MWM at the end of iteration k is πk, where πk(i)=argmax {mˆk }, for 1≤i≤n.
+1≤j≤n βj→αi
+(5) Repeat (3)-(4) till πk converges.
+Now, we state and prove the claim that relates the above modified algorithm to the original Min-Sum algorithm.
+Lemma 4: In Min-Sum algorithm adding an equal amount to all coordinates of any message vector Mk (similarly
+αi→βj
+Mk ) at anytime does not change the resulting estimated matching πm for all k,m.
+βj→αi
+Proof: If a number is added to all coordinates of Mk it is not hard to see from equation (11) and structure of
+αi→βj
+ψ (·,·) that other message and belief vectors will change only up to an additive constant to their coordinates. Hence these
+αiβj
+changes do not affect πm(i)=argmax {bm(j)}, for 1≤i≤n.
+1≤j≤n αi
+Lemma 5: ThealgorithmsMin-SumandSimplifiedMin-Sumproduceidenticalestimatedmatchingsπm attheendofevery
+iteration m.
+Proof: Consider the Min-Sum algorithm.In particular,consider a message vector Mk in iteration k. First, we claim
+αi→βj
+that all for any given k ≥0, mk (r),r 6=i are the same. That is, for r 6=r and r ,r 6=i,
+αi→βj 1 2 1 2
+mk (r )=mk (r ).
+αi→βj 1 αi→βj 2
+For k =0, this claim holds by definition. For k ≥1, consider the definition of mk (r),r 6=i.
+αi→βj
+mk (r)= max ψ (q,r) w + mk−1(q) =max w + mk−1(q) . (19)
+αi→βj 1≤q≤n αiβj  iq βℓαi  q6=j  iq βℓαi 
+ℓ6=j ℓ6=j
+X X
+   
+The first equality follows from definition in Min-Sum algorithm while second equality follows from property of ψ (·,·).
+αiβj
+The equation (19) is independent of r(6=i). This proves the desired claim.
+The abovestated propertyof Min-Sum algorithm immediatelyimplies that the vector Mk has only two distinct values,
+αi→βj
+one corresponding to mk (i) and the other corresponding to mk (r),r 6= i. Now subtract mk (r),r 6= i from
+αi→βj αi→βj αi→βj
+all coordinates of Mk . Lemma 4 guarantees the resulting matching πm for all m does not change. Performing the same
+αi→βj
+modification to all message vectors yields a Modified Min-Sum algorithm with the same outcome as Min-Sum. But each
+message vector Mk in this Modified Min-Sum has all coordinates equal to zero except the ith coordinate. Denote these
+αi→βj
+ith coordinates by m˜k . Now equation (11) shows these for all i,j,k numbers m˜k satisfy the following recursive
+αi→βj αi→βj
+equations:
+m˜k = w −max(m˜k−1 +w ),
+αi→βj ij
+ℓ6=j
+βℓ→αi iℓ
+m˜k = w −max(m˜k−1 +w ) (20)
+βj→αi ij
+ℓ6=i
+αℓ→βj ℓj
+===== PAGE 9 =====
+9
+Similarly for new beliefs we have:
+˜bk (r) = m˜k +w ,
+αi βr→αi ir
+˜bk (s) = m˜k +w (21)
+βj αs→βj sj
+Now by adding w to each side of (20) and dividing them by 2 it can be seen from (18) that numbers m˜k αi→βj +wij and
+ij 2
+mˆk satisfy the same recursive equations. They also satisfy the same initial conditions. As result for all i,j,k we have
+αi→βj
+m˜k +w
+mˆk = αi→βj ij =˜b (j) (22)
+αi→βj 2 αi
+and
+m˜k +w
+mˆk = βj→αi ij =˜b (i) (23)
+βj→αi 2 βj
+This shows that the estimated matching computed at nodes in Modified Min-Sum and Simplified Min-Sum algorithms are
+exactly the same at each iteration which completes the proof of Lemma 5.
+Note 5. The simplified min-sum equations can also be derived in a direct way by looking interpretation of the messages
+{mˆk } in the computationtree. More specifically consider the level-(k+1) computationtree rooted at α , Tk+1. Also
+αi→βj i,j,k i αi
+consider its subtree, Tk , that is built by adding the edge (α ,β ) at the root of Tk+1 to graph of all descendants of β .
+αi,βj i j αi j
+One can show that the message mˆk is equal to the difference between weight of maximum weight T-matchingin Tk
+βj→αi αi,βj
+that uses the edge (α ,β ) at the root and weight of the maximum weight T-matching in Tk that does not use that edge.
+i j αi,βj
+Now a simple induction gives us the update equations (18).
+B. COMPLEXITY OF SIMPLIFIED MIN-SUM
+The Lemma 5 and Theorem 1 immediately imply that the Simplified Min-Sum, like Min-Sum, converges after O
+nw∗
+ǫ
+iterations. As described above, the Simplified Min-Sum algorithm requires total O(n2) messages per iteration. Thus, fo(cid:16)r fixe(cid:17)d
+w∗ and ǫ the algorithm requires total O(n3) messages to be exchanged.
+Now, we consider the number of computational operations done by each node in an iteration. From the description of
+Simplified Min-Sum algorithm, it may seem that each node will require to do O(n) work for sending each message and thus
+O(n2) work overallat one node. But, we present a simple method that shows each node can compute message for all of its n
+neighborswithO(n)computationaloperation(comparison,addition/subtraction).ThiswillresultinO(n2)overallcomputation
+periteration.Thus,itwilltakeO
+n3w∗
+computationinO
+nw∗
+iterations.ThiswillresultintotalcomplexityofO
+n3w∗
+ǫ ǫ ǫ
+in terms of overall messages as w(cid:16)ell as(cid:17)computation operati(cid:16)ons. (cid:17) (cid:16) (cid:17)
+Here we describe an algorithm to compute messages mˆk ,1 ≤ j ≤ n using received messages mˆk−1 ,1 ≤ j ≤ n.
+α1→βj βj→α1
+This is the same algorithm that all α ,1≤i≤n, and β ,1≤j ≤n, need to employ. Now, define
+i j
+i = argmax mˆk−1
+1 1≤j≤n βj→α1
+i = argmax mˆk−1
+2 1≤j≤n,j6=i1 βj→α1
+Mx = mˆk−1
+1 βi1 →α1
+Mx = mˆk−1
+2 βi2 →α1
+Then, from (18) we obtain
+mˆk = w −Mx ,
+α1→βi1 1i1 2
+mˆk = w −Mx for j 6=i . (24)
+α1→βj 1j 1 1
+We see thatcomputingallmessagesmˆk takesO(n) operations.From(24), ittakesnodeα O(n) computationsto find
+α1→βj 1
+i ,i ,Mx ,Mx , then it takes O(1) computation to compute each of the mˆk ,1 ≤ j ≤ n. That is, total O(n) operations
+1 2 1 2 α1→βj
+for computing all messages mˆk ,1≤j ≤n.
+α1→βj
+Thus, we have established that each node α ,1≤i≤n, and β ,1≤j ≤n, need to performO(n) computationto compute
+i j
+all of its messages in a given iteration. That is, the total computation cost per iteration is O(n2). In summary, Theorem 1,
+Lemma 5 and discussion of this Section IV-B immediately yield the following result.
+Theorem 2: The Simplified Min-Sum algorithm finds the Maximum Weight Matching in O
+nw∗
+iterations with total
+ǫ
+computation cost of O n3w∗ and O n3w∗ total number of message exchanges. (cid:16) (cid:17)
+ǫ ǫ
+(cid:16) (cid:17) (cid:16) (cid:17)
+===== PAGE 10 =====
+10
+V. AUCTION AND MIN-SUM
+In this section, we will first recall the auction algorithm [6] and then describe its relation to the min-sum algorithm.
+A. AUCTION ALGORITHM FOR MWM
+The Auction algorithm finds the MWM via an “auction”: all α become buyers and all β become objects. Let p denote
+i j j
+the price of β and w be the value of object β for buyer α . The net benefit of an assignment or matching π is defined as
+j ij j i
+n
+w −p .
+iπ(i) π(i)
+i=1
+X(cid:0) (cid:1)
+The goal is to find π∗ that maximizes this net benefit. It is clear that for any set of prices p ,...,p , the MWM maximizes
+1 n
+the net benefit. The auction algorithm is an iterative method for finding the optimal prices and an assignment that maximizes
+the net benefit (and is therefore the MWM).
+Auction Algorithm.
+◦ Initialize the assignment S =∅, the set of unassigned buyers I ={α ,...,α }, and prices p =0 for all j.
+1 n j
+◦ The algorithm runs in two phases, which are repeated until S is a complete matching.
+◦ Phase 1: Bidding.
+For all α ∈I,
+i
+(1) Find benefit maximizing β . Let,
+j
+j =argmax {w −p }, v =max{w −p }, and u =max{w −p }. (25)
+i j ij j i ij j i ij j
+j j6=ji
+(2) Compute the ”bid” of buyer α , denoted by b as follows: given a fixed positive constant δ,
+i αi→βji
+b =w −u +δ.
+αi→βji iji i
+◦ Phase 2: Assignment.
+For each object β ,
+j
+(3) Let P(j) be the set of buyers from which β received a bid. If P(j)6=∅, increase p to the highest bid,
+j j
+p = max b .
+j
+αi∈P(j)
+αi→βj
+(4) Remove the maximum bidder α from I and add (α ,β ) to S. If (α ,β )∈S, k 6=i , then put α back in I.
+ij ij j k j j k
+Theorem 3 ([5]): If 0<δ <ǫ/n, then the assignmentS convergesto the MWM in O(nw∗/ǫ) iterations with runningtime
+O(n3w∗/ǫ) (where ǫ and w∗ are as defined earlier).
+B. CONNECTING MIN-SUM AND AUCTION
+Thesimilaritybetweenequations(24)and(25)suggestsaconnectionbetweenthemin-sumandauctionalgorithms.Next,we
+describe modifications to the min-sum and auction algorithms, called min-sum auction I and min-sum auction II, respectively.
+We will show that these versions are equivalent and derive some of their key properties. Here we consider the na¨ıve auction
+algorithm (when δ =0) and deal with the case δ >0 in the next section.
+Min-Sum Auction I
+(1) Each α sends a number to β and vice-versa. Let the messages in iteration k be denoted as m˜k , m˜k ∈R.
+i j αi→βj βj→αi
+(2) Initialize k =0 and set m˜0 =0.
+βj→αi
+(3) For k ≥1, update messages as follows:
+m˜k = w −max{w −m˜k−1 },
+αi→βj ij
+ℓ6=j
+iℓ βℓ→αi
+m˜k = m n ax m˜k , (26)
+βj→αi
+ℓ=1
+αℓ→βj
+(4) The estimated MWM at the end of iteration k is the set of edges
+πk ={(α ,β )| i =arg max {m˜k } 1≤j ≤n, and m˜k ≥m˜k−1 }
+ij j j
+1≤ℓ≤n
+αℓ→βj αij →βj βj→αi
+(5) Repeat (3)-(4) till πk is a complete matching.
+Min-Sum Auction II.
+===== PAGE 11 =====
+11
+◦ Initialize the assignment S =∅ and prices p =0 for all j.
+j
+◦ The algorithm runs in two phases, which are repeated until S is a complete matching.
+◦ Phase 1: Bidding.
+For all α ,
+i
+(1) Find β that maximizes the benefit. Let,
+j
+j i =argmax j {w ij−p j}, v i =m j ax{w ij−p j}, and u i =m j6= a j x i {w ij−p j}. (27)
+(2) Compute the ”bid” of buyer α , denoted by b :
+i αi→βj
+b =w −u , and b =w −v , j 6=j .
+αi→βji iji i αi→βj ij i i
+◦ Phase 2: Assignment.
+For each object β ,
+j
+(3) Set price p to the highest bid, p =max b .
+j j αi αi→βj
+(4) Reset S = ∅. Then, for each j add the pair (α ,β ) to S if b ≥ p , where α is a buyer attaining the
+ij j αji →βj j ij
+maximum in step (3).
+Theorem 4: The algorithms min-sum auction I and II are equivalent.
+Proof: Let bk and pk denote the bids and prices at the end of iteration k in algorithm min-sum auction II. Now,
+αi→βj j
+identifybk withm˜k andpk withm˜k .Thenitisimmediatethatmin-sumauctionIIbecomesidenticaltomin-sum
+αi→βj αi→βj j βj→αi
+auction I. This completes the proof of Theorem 4.
+Next we will prove that if the min-sum auction algorithm terminates (we omit reference to I or II), it finds the correct
+maximum weight matching. As we will see, the proof uses standard arguments (see [6] for example).
+Theorem 5: Let σ be the termination matching of the min-sum auction I (or II). Then it is the MWM, i.e. σ =π∗.
+Proof: The prooffollowsby establishing that at termination,the messages of min-sumauction form the optimalsolution
+for the dual of the MWM problem and σ is the corresponding optimal solution to the primal, i.e. MWM. To do so, we first
+state the dual of the MWM problem
+n n
+min r + p
+i j
+i=1 j=1
+X X
+subject to r +p ≥ w . (28)
+i j ij
+Let (r∗,p∗) be the optimal solution to the above stated dual problem and let π∗ solve the primal MWM problem. Then, the
+standard complimentary slackness conditions are:
+r i ∗+p∗ π∗(i) = w iπ∗(i) . (29)
+Thus, (r∗,p∗,π∗) are the optimal dual-primalsolution for the MWM problem if and only if (a) π∗ is a matching, (b) (r∗,p∗)
+satisfy (28), and (c) the triple satisfies (29). To complete the proof we will prove the existence of r∗,p∗ such that (r∗,p∗,σ)
+satisfy (a), (b) and (c).
+Tothisend,firstnotethatσ isamatchingbytheterminationconditionofthealgorithm;thus,condition(a)issatisfied.We’ll
+consider the min-sum auction II algorithm for the purpose of the proof. Suppose the algorithm terminates at some iteration k.
+Let pk−1 and pk be the prices of β in iterations k−1 and k respectively. Since all β s are matched at the termination, from
+j j j j
+step (4) of the min-sum auction II, we obtain
+pk ≥ pk−1, ∀j. (30)
+j j
+At termination(iterationk), α i is matchedwith β σ(i) or β j is matched with α σ−1(j) . By the definition of the min-sum auction
+II algorithm,
+pk j = w σ−1(j)j −max w σ−1(j)ℓ −p ℓ k−1 . (31)
+ℓ6=j
+From (30) and (31), we obtain that (cid:2) (cid:3)
+w σ−1(j)j −pk j ≥ max w σ−1(j)ℓ −pk ℓ . (32)
+ℓ6=j
+(cid:2) (cid:3)
+Define,r∗ =w −pk andp∗ =pk. Then,from(32) (r∗,p∗)satisfy the dualfeasibility,thatis(28). Further,bydefinition
+i iσ(i) σ(i) j j
+theysatisfythecomplimentaryslacknesscondition(29).Thus,thetriple(r∗,p∗,σ)satisfies (a),(b)and(c)asrequired.Hence,
+the algorithm min-sum auction II produces the MWM, i.e. σ =π∗.
+The min-sum auction II algorithm looks very similar to the auction algorithm and inherits some of its properties. However,
+it also inheritssome propertiesof the min-sum algorithm.This causes it to behavedifferentlyfrom the auction algorithm.The
+===== PAGE 12 =====
+12
+proof of convergence of auction algorithm relies on two properties of the auctioning mechanism: (a) the prices are always
+non-decreasingand (b) the number of matched objects is always non-decreasing.By design, (a) and (b) can be shown to hold
+for the auction algorithm. However, it is not clear if (a) and (b) are true for min-sum auction. In what follows, we state the
+result that prices are eventually non-decreasing in the min-sum auction algorithm; however it seems difficult to establish a
+statement similar to (b) for the min-sum algorithm as of now.
+Theorem 6: If π∗ is unique then in the min-sum auction II algorithm, prices eventually increase. That is, ∀k ∈Z+; ∃ T >
+k s.t. ∀t≥T; pt >pk, 1≤j ≤n
+j j
+Proof: Proof of Theorem (6) is essentially based on (i) the equivalence between the min-sum auction algorithms I and
+II, and (ii) arguments very similar to the ones used in the proof of Lemma 2 , where we relate prices with the computation
+tree.
+Oursimulationssuggeststhatintheabsenceofthecondition“m˜k ≥m˜k−1 ” fromstep(4)ofmin-sumauctionI,the
+αij →βj βj→αi
+algorithm always terminates and finds the MWM as long as it is unique. This along with Theorem 6 leads us to the following
+conjecture.
+Conjecture 1: Ifπ∗ isuniquethenthemin-sumauctionIterminatesinafinitenumberofiterationsifcondition“m˜k ≥
+αij →βj
+m˜k−1 ” is removed from step (4).
+βj→αi
+C. RELATION TO δ-RELAXATION
+In the previous section, we established a relation between the min-sum and auction (with δ =0) algorithms. In [6], [5] the
+author extends the auction algorithm to obtain guaranteed convergence in a finite number of iterations via a δ-relaxation for
+some δ >0. Atterminationthe δ-relaxedalgorithmproducesa triple(r∗,p∗,π∗)such that(a1)π∗ is a matching,(b1)(r∗,p∗)
+satisfy (28) and (c1) the following modified complimentary slackness conditions are satisfied:
+r i ∗+p∗ π∗(i) ≤ w iπ∗(i) +δ. (33)
+The conditions (c1) are referred to as δ-CS conditions in [6]. This modification is reflected in the description of the auction
+algorithm where we have added δ to each bid in step (2). We established the relation between min-sum and auction for
+δ = 0 in the previous section. Here we make a note that for every δ > 0, the similar relation holds. To see this, we
+consider min-sum auction I and II where the bid computation is modified as follows: modify step (3) of min-sum auction
+I as m˜k = w −max {w −m˜k−1 }+δ, and modify step (2) of min-sum auction II as b = w −u +
+αi→βj ij ℓ6=j iℓ βℓ→αi αi→βji iji i
+δ, and b = w −v +δ, j 6= j . For these modified algorithms, we obtain the following result using arguments very
+αi→βj ij i i
+similar to the ones used in Theorem 5.
+Theorem 7: For δ > 0, let σ be the matching obtained from the modified min-sum auction algorithm I (or II). Then,
+w σ ≥w π∗ −nδ (i.e. σ is within nδ of the MWM).
+VI. DISCUSSION AND CONCLUSION
+In this paper, we proved that the max-productalgorithm convergesto the desirable fixed point in the context of finding the
+MWMforabipartitegraph,eveninthepresenceofloops.Thisresulthasatwofoldimpact.First,itwillpossiblyopenavenues
+for a demystification of the max-product algorithm. Second, the same approach may provably work for other combinatorial
+optimization problems and possibly lead to better algorithms.
+Using the regularity of the structure of the problem, we managed to simplify the max-product algorithm. In the simplified
+algorithmeachnodeneedstoperformO(n)addition-subtractionoperationsineachiteration.SinceO(n)iterationsarerequired
+in the worst case, for finite w∗ and ǫ, the algorithm requires O(n3) operations at the most. This is comparable with the best
+known MWM algorithm. Furthermore, the distributed nature of the max-product algorithm makes it particularly suitable for
+networking applications like switch scheduling where scalability is a necessary property.
+Future work will consist of trying to extendour result to finding the MWM in a generalgraph,as our currentargumentsdo
+not carry over2. Also, we would like to obtain tighter bounds on the running time of the algorithm since simulation studies
+show that the algorithm runs much faster on average than the worst case bound obtained in this paper.
+ACKNOWLEDGMENT
+While working on this paper D. Shah was supported by NSF grant CNS - 0546590.
+2Akeyfactintheproofoflemma3wasthepropertythatbipartite graphsdonothaveoddcycles.
+===== PAGE 13 =====
+13
+REFERENCES
+[1] S. M. Aji, G. B. Horn and R. J. McEliece, “On the Convergence of Iterative Decoding on Graphs with a Single Cycle,” in Proc. IEEE Int. Symp.
+Information Theory,1998,p.276.
+[2] S.M.AjiandR.J.McEliece, “TheGeneralized Distributive Law,”IEEETrans.Inform.Theory,Vol.46,pp.325-343,2000.
+[3] M.Bayati, D.ShahandM.Sharma,“MaxWeightMatching viaMaxProductBeliefPropagation,” IEEEISIT,2005.
+[4] M.Bayati, D.ShahandM.Sharma,“Asimplermax-productmaximumweightmatchingalgorithm andtheauctionalgorithm,” IEEEISIT,2006.
+[5] D. P. Bertsekas, “Auction Algorithms for Network Flow Problems: A Tutorial Introduction,” Computational Optimization and Applications, Vol. 1, pp.
+7-66,1992
+[6] D.Bertsekas andJ.Tsitsiklis, “Parallel andDistributed Computation: NumericalMethods,”Englewood Cliffs NJ:Prentice Hall,1989.
+[7] R.G.Gallager, “LowDensityParityCheckCodes,”Cambridge, MA:MITPress,1963.
+[8] J. Edmonds and R. Karp, “Theoretical Improvements in Algorithmic Efficiency for Network Flow Problems,” Jour. of the ACM, Vol. 19, pp 248-264,
+1972.
+[9] B.J.Frey,R.Koetter, “Exactinference usingtheattenuated max-product algorithm”, Advanced MeanFieldMethods: TheoryandPractice, ed.Manfred
+OpperandDavidSaad,MITPress,2000.
+[10] G.B.Horn,“Iterative DecodingandPseudocodewords,” Ph.D.dissertation, Department ofElectrical Engineering, CalTech, Pasadena, CA,1999.
+[11] S.Lauritzen, “Graphical models,”OxfordUniversity Press,1996.
+[12] E.Lawler,“Combinatorial Optimization: NetworksandMatroids”, Holt,RinehartandWinston, NewYork,1976.
+[13] N.McKeown, V.Anantharam andJ.Walrand, “Achieving 100%ThroughputinanInput-Queued Switch,” Infocom,Vol.1,pp296-302,1996.
+[14] M.Mezard, G.ParisiandR.Zecchina “Analytic andalgorithmic solutionofrandomsatisfiability problems,”Science, 297,812,2002.
+[15] J.Pearl,“Probabilistic ReasoninginIntelligent Systems:Networks ofPlausible Inference,” SanFrancisco, CA:MorganKaufmann,1988.
+[16] T.Richardson andR.Urbanke, “TheCapacity ofLow-Density ParityCheck Codes underMessage-Passing Decoding,” IEEETrans.Info. Theory,Vol.
+47,pp599-618,2001.
+[17] M.Wainwright, M.Jordan, “Graphical models,exponential families, andvariational inference,” Dept. ofStat.,University ofCal.,Berkeley, CA,Tech.
+Report, 2003.
+[18] M. J. Wainwright, T. S. Jaakkola, and A. S. Willsky, ”Tree Consistency and Bounds on the Performance of the Max–Product Algorithm and its
+Generalizations”, Statistics andComputing, 14,2004.
+[19] Y.Weiss,“Correctness oflocalprobability propagation ingraphical modelswithloops,”NeuralComput.,Vol.12,pp.1-42,2000.
+[20] Y.Weiss,“Belief propagation andrevisioninnetworks withloops,”MITAILab.,Tech.Rep.1616,1997.
+[21] Y.WeissandW.Freeman, “Correctness ofbelief propagation inGaussian graphical models ofarbitrary topology,” Neural Comput., Vol.13,Issue10,
+pp2173-2200,2001.
+[22] Y. Weiss and W. T. Freeman, ”On the Optimality of Solutions of the Max–Product Belief–Propagation Algorithm in Arbitrary Graphs”, IEEE Trans.
+Info.Theory,47:2,2001.
+[23] J.Yedidia, W.FreemanandY.Weiss,“Understanding Belief Propagation anditsGeneralizations,” MitsubishiElect.Res.Lab.,TR-2001-22,2000.
+[24] J.Yedidia, W.FreemanandY.Weiss,“Generalized Belief Propagation,” Mitsubishi Elect.Res.Lab.,TR-2000-26,2000.
