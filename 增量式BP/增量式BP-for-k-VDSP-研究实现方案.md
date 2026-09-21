@@ -29,7 +29,7 @@ cssclasses: [wide]
 | 编号 | 贡献 | 一句话 | 直接依据 |
 |---|---|---|---|
 | **C1** | 建模层修正 | 把 P22 的「2 值消息函数」严格等价地压缩为**单个标量 δ**，并给出内部顶点 top-2 / 源汇 top-k 的**闭式局部更新式**与 O(log deg) 实现 | P22 式(6)(7) + I-谱系中的标量化先例（#9/#10/#13/#6） |
-| **C2** | 三档增量机制 | 档 A 残差驱动调度、档 B warm-start + 影响区域、档 C 结构/参数变化；三档**正交可叠加**，正确性统一由不动点不变性兜底 | I1/I2/I8/I11（档 A）、I10/I7/I13（档 B）、I3/I4/I9/I12 + P22 §V（档 C） |
+| **C2** | 三档增量机制 | 档 A 残差驱动调度、档 B warm-start + 影响区域、档 C 结构/参数变化；三档**正交可叠加**，正确性统一由不动点不变性兜底 | I1/I2/I3/I6（档 A）、I7/I8/I13（档 B）、I9/I10/I11/I12 + P22 §V（档 C） |
 | **C3** | 增量理论刻画 + 实验学 | 用「不动点不变 + 轮数上界继承 + 局部化复杂度」三层刻画增量收益，并以**拆点最小费用流**为精确基线做正确性对拍与效率消融 | P22 定理1/推论2、I1 定理、I13 的 localizable/bounded 刻画 |
 
 ### 0.3 关键判断（汇报时必须先讲的三条）
@@ -48,19 +48,21 @@ cssclasses: [wide]
 
 **B. 增量式 13 篇（`增量式BP/` 目录）**
 
+> 编号 = 建议阅读顺序：1-6 档 A（残差驱动调度）、7-8 档 B（warm start + 影响区域）、9-12 档 C（结构/参数变化）、13 理论刻画。
+
 | 标签 | 论文 | 在本方案中的作用 |
 |---|---|---|
 | **I1** | [[增量式BP/(1)2006[Elidan, ..] - Residual Belief Propagation Informed Scheduling for Asynchronous Message Passing.pdf\|Elidan, McGraw, Koller 2006 — Residual BP]] | 档 A 核心：残差定义 + 优先队列调度 + 异步收敛到唯一不动点的定理 |
 | **I2** | [[增量式BP/(2)2007[Sutton, ..] - Improved Dynamic Schedules for Belief Propagation.pdf\|Sutton & McCallum 2007 — Improved Dynamic Schedules]] | 档 A 优化：残差**上界估计**（省掉"白算"的消息）+ 因子/参数变化时的残差初始化 |
-| **I3** | [[增量式BP/(3)2021[Wu, ..] - Streaming Belief Propagation for Community Detection.pdf\|Wu et al. 2021 — Streaming BP]] | 档 C 流式：每次到达只做 O(R) 次有限更新（R-local） |
-| **I4** | [[增量式BP/(4)2021[Singh, ..] - Incremental Inference of Collective Graphical Models.pdf\|Singh et al. 2021 — SW-SBP]] | 档 C 窗口：滑动窗口 + 用窗首节点编码被丢弃观测的信息 |
-| **I5** | [[增量式BP/(5)2015[Knoll, ..] - Message Scheduling Methods for Belief Propagation.pdf\|Knoll et al. 2015 — Message Scheduling]] | 档 A 稳定化：对振荡消息加噪声 / 权重衰减 |
-| **I6** | [[增量式BP/(6)2009[Gonzalez, ..] - Residual Splash for Optimally Parallelizing Belief Propagation.pdf\|Gonzalez, Low, Guestrin 2009 — Residual Splash]] | 档 A 并行：把待更新消息打成 splash 并行推进，理论最优并行度 |
-| **I7** | [[增量式BP/(7)2018[Papachristoudis, ..] - Adaptive Belief Propagation.pdf\|Papachristoudis & Fisher 2018 — AdaBP]] | 档 B 自适应：只更新与当前 query 相关的子图 |
-| **I8** | [[增量式BP/(8)2008[Casado, ..] - Informed Dynamic Scheduling for Belief-Propagation Decoding of LDPC Codes.pdf\|Casado et al. 2008 — Informed Dynamic Scheduling]] | 档 A 先例：残差调度在译码中比 flooding 快约 2 倍且单轮复杂度不变 |
-| **I9** | [[增量式BP/(9)2015[Gatterbauer, ..] - Linearized and Single-Pass Belief Propagation.pdf\|Gatterbauer et al. 2015 — LinBP / SBP]] | 档 C 预算模式：线性化 + 单遍传播，动态网络快速增量更新 |
-| **I10** | [[增量式BP/(10)2010[Nath, ..] - Efficient Belief Propagation for Utility Maximization and Repeated Inference.pdf\|Nath & Domingos 2010 — EFBP]] | 档 B 核心：扩张前沿（expanding frontier）+ 与标准 BP 的信念差界 |
-| **I11** | [[增量式BP/(11)2015[Fujiwara, ..] - Quiet Faster Belief Propagation for Images and Related Applications.pdf\|Fujiwara & Shasha 2015 — Quiet]] | 档 A 剪枝：已收敛消息直接跳过，且保证输出与标准 BP 一致 |
+| **I3** | [[增量式BP/(3)2008[Casado, ..] - Informed Dynamic Scheduling for Belief-Propagation Decoding of LDPC Codes.pdf\|Casado et al. 2008 — Informed Dynamic Scheduling]] | 档 A 先例：残差调度在译码中比 flooding 快约 2 倍且单轮复杂度不变 |
+| **I4** | [[增量式BP/(4)2015[Knoll, ..] - Message Scheduling Methods for Belief Propagation.pdf\|Knoll et al. 2015 — Message Scheduling]] | 档 A 稳定化：对振荡消息加噪声 / 权重衰减 |
+| **I5** | [[增量式BP/(5)2009[Gonzalez, ..] - Residual Splash for Optimally Parallelizing Belief Propagation.pdf\|Gonzalez, Low, Guestrin 2009 — Residual Splash]] | 档 A 并行：把待更新消息打成 splash 并行推进，理论最优并行度 |
+| **I6** | [[增量式BP/(6)2015[Fujiwara, ..] - Quiet Faster Belief Propagation for Images and Related Applications.pdf\|Fujiwara & Shasha 2015 — Quiet]] | 档 A 剪枝：已收敛消息直接跳过，且保证输出与标准 BP 一致 |
+| **I7** | [[增量式BP/(7)2010[Nath, ..] - Efficient Belief Propagation for Utility Maximization and Repeated Inference.pdf\|Nath & Domingos 2010 — EFBP]] | 档 B 核心：扩张前沿（expanding frontier）+ 与标准 BP 的信念差界 |
+| **I8** | [[增量式BP/(8)2018[Papachristoudis, ..] - Adaptive Belief Propagation.pdf\|Papachristoudis & Fisher 2018 — AdaBP]] | 档 B 自适应：只更新与当前 query 相关的子图 |
+| **I9** | [[增量式BP/(9)2021[Wu, ..] - Streaming Belief Propagation for Community Detection.pdf\|Wu et al. 2021 — Streaming BP]] | 档 C 流式：每次到达只做 O(R) 次有限更新（R-local） |
+| **I10** | [[增量式BP/(10)2021[Singh, ..] - Incremental Inference of Collective Graphical Models.pdf\|Singh et al. 2021 — SW-SBP]] | 档 C 窗口：滑动窗口 + 用窗首节点编码被丢弃观测的信息 |
+| **I11** | [[增量式BP/(11)2015[Gatterbauer, ..] - Linearized and Single-Pass Belief Propagation.pdf\|Gatterbauer et al. 2015 — LinBP / SBP]] | 档 C 预算模式：线性化 + 单遍传播，动态网络快速增量更新 |
 | **I12** | [[增量式BP/(12)2023[Qadri, ..] - InCOpt Incremental Constrained Optimization Using the Bayes Tree.pdf\|Qadri et al. 2023 — InCOpt]] | 档 C 通用增量求解：Bayes tree 上行/下行 pass + fluid relinearization |
 | **I13** | [[增量式BP/(13)2017[Fan, ..] - Incremental Graph Computations Doable and Undoable.pdf\|Fan, Hu, Tian 2017 — Doable & Undoable]] | 理论刻画：用 localizable / bounded-relative 代替严格的 bounded |
 
@@ -328,9 +330,9 @@ b(e)(x(e)) = m(e→i)(x(e)) + m(e→j)(x(e)) − φ(e)(x(e))
 
 | 档 | 触发条件 | 改变的是什么 | 采用的论文 | 机制要点 |
 |---|---|---|---|---|
-| **A 调度型** | 收敛慢 / 有环振荡 / 想 anytime 输出 | **更新顺序**（不含问题本身） | I1, I2, I5, I6, I8, I11 | 残差驱动异步：每次只更新当前残差最大的半消息；优先队列；阻尼 |
-| **B 参数型** | 弧权局部变化、因子/观测变化 | **初值**（warm start） | I2(§4), I7, I10, I13 | 复用上一轮 δ 作初值；用"受影响区域/前沿"限定传播范围 |
-| **C 结构型** | 加删弧/点、k 或 f 变化、流式到达 | **问题实例本身** | I3, I4, I9, I12 + P22 §V | 把实例变化翻译成"哪些半消息的初值失效"，其余全部复用 |
+| **A 调度型** | 收敛慢 / 有环振荡 / 想 anytime 输出 | **更新顺序**（不含问题本身） | I1, I2, I4, I5, I3, I6 | 残差驱动异步：每次只更新当前残差最大的半消息；优先队列；阻尼 |
+| **B 参数型** | 弧权局部变化、因子/观测变化 | **初值**（warm start） | I2(§4), I8, I7, I13 | 复用上一轮 δ 作初值；用"受影响区域/前沿"限定传播范围 |
+| **C 结构型** | 加删弧/点、k 或 f 变化、流式到达 | **问题实例本身** | I9, I10, I11, I12 + P22 §V | 把实例变化翻译成"哪些半消息的初值失效"，其余全部复用 |
 
 **正交性论证（写进汇报的关键）**：BP 的不动点集合只由三元组 (G, w, f) 决定。档 A 改变的是"沿哪条路径逼近不动点"，档 B 改变的是"从哪个点出发逼近"，二者都不改变"逼近到哪个点"；档 C 则是**换了一个新实例**，此时档 B 的 warm start 是把旧实例的不动点当作新实例的初值——正确性由新实例自身的唯一性条件与档 A 的收敛保证共同兜底。因此三档可以自由叠加：**(A 的调度) × (B 的热启动) × (C 的实例变化)**。
 
@@ -341,7 +343,7 @@ b(e)(x(e)) = m(e→i)(x(e)) + m(e→j)(x(e)) − φ(e)(x(e))
 #### A-1 残差定义与主循环（I1 核心）
 
 - 残差：**r(i→e) := ｜δ(new)(i→e) − δ(old)(i→e)｜**（标量化后就是绝对差）
-- I8 Casado 式(3) 给的是同一思想的范数形式：r(mₖ) = ‖fₖ(m) − mₖ‖，并指出"随着 BP 收敛，更新前后消息之差趋于零，因此残差大的消息最值得更新"。
+- I3 Casado 式(3) 给的是同一思想的范数形式：r(mₖ) = ‖fₖ(m) − mₖ‖，并指出"随着 BP 收敛，更新前后消息之差趋于零，因此残差大的消息最值得更新"。
 - 主循环：最大堆取队首 → 用 §2.3 的闭式重算 → 若 ｜Δ(e)｜ ≤ eps 则跳过 → 否则阻尼后写回，并把**受影响的邻居半消息**以各自的新残差入队。
 
 #### A-2 阻尼（damping）与不动点不变性
@@ -356,11 +358,11 @@ b(e)(x(e)) = m(e→i)(x(e)) + m(e→j)(x(e)) − φ(e)(x(e))
 | 变体 | 来源 | 做法 | 收益 | 代价 |
 |---|---|---|---|---|
 | **RBP0L（残差估计）** | I2 §3–§4 | 不真算消息来定优先级，而用**上界估计**：待更新消息的残差 ≤ 其入消息残差的（按度数缩放的）组合 | 减少"只为了算优先级而白算"的消息（I2 称可快至 5 倍） | 需要维护估计值与真实值的偏差 |
-| **Quiet（静默剪枝）** | I11 | 当某半消息的残差为 0 且其入消息自上次更新后未变，则**跳过且不再入队**，直到入消息再次变化才唤醒 | 稳态/局部变化场景下省掉绝大多数更新 | 需要"入消息版本号"依赖计数 |
-| **振荡抑制** | I5 | 检测"同一序列的消息被反复更新"（局部振荡），对其施加 (a) 噪声扰动 或 (b) 权重衰减 δ ← γ·δ（γ < 1） | 强行打破振荡、保证收敛 | 权重衰减会引入微小偏差，需在收敛后做若干次无衰减修正轮 |
-| **Residual Splash（并行）** | I6 | 把残差较大的、**互不依赖的**若干条消息打成 "splash" 并行更新，理论最优并行度 | 多核/分布式下的近线性加速 | 需要依赖图与调度分组 |
+| **Quiet（静默剪枝）** | I6 | 当某半消息的残差为 0 且其入消息自上次更新后未变，则**跳过且不再入队**，直到入消息再次变化才唤醒 | 稳态/局部变化场景下省掉绝大多数更新 | 需要"入消息版本号"依赖计数 |
+| **振荡抑制** | I4 | 检测"同一序列的消息被反复更新"（局部振荡），对其施加 (a) 噪声扰动 或 (b) 权重衰减 δ ← γ·δ（γ < 1） | 强行打破振荡、保证收敛 | 权重衰减会引入微小偏差，需在收敛后做若干次无衰减修正轮 |
+| **Residual Splash（并行）** | I5 | 把残差较大的、**互不依赖的**若干条消息打成 "splash" 并行更新，理论最优并行度 | 多核/分布式下的近线性加速 | 需要依赖图与调度分组 |
 
-> **I8 的先例价值**：在 LDPC 译码中，残差式 informed dynamic scheduling 比 flooding 少约一半迭代，且**单轮复杂度不变**（因为只是换顺序，不是多算）。这为"档 A 不改正确性、只改速度"提供了实证支撑。
+> **I3 的先例价值**：在 LDPC 译码中，残差式 informed dynamic scheduling 比 flooding 少约一半迭代，且**单轮复杂度不变**（因为只是换顺序，不是多算）。这为"档 A 不改正确性、只改速度"提供了实证支撑。
 
 #### A-4 复杂度
 
@@ -380,7 +382,7 @@ b(e)(x(e)) = m(e→i)(x(e)) + m(e→j)(x(e)) − φ(e)(x(e))
 | 单弧 e 权变 Δw | 仅 δ(e→i)、δ(e→j)（各加 Δw），残差 ｜Δw｜ |
 | 加/删弧 e | e 的两条半消息 δ = 0；两端点 i, j 的**全部出半消息**标记失效 |
 | k 或 f 变化 | 仅 s（及多源多汇的 S）与 t（及 T）的全部半消息 |
-| 点/弧流式到达 | 新点及其 R-邻域内的半消息（I3） |
+| 点/弧流式到达 | 新点及其 R-邻域内的半消息（I9） |
 
 其余半消息**原值保留、入队优先级 = 0**（或按 A-3 的估计式给一个低优先级）。这就是"前沿之外不动"的实现形式。
 
@@ -388,12 +390,12 @@ b(e)(x(e)) = m(e→i)(x(e)) + m(e→j)(x(e)) − φ(e)(x(e))
 
 | 方法 | 组织波前的方式 | 与本方案的关系 |
 |---|---|---|
-| **EFBP（I10 Nath 2010）** | 按**受影响区域**组织"扩张前沿"：只在前沿推进，并证明 EFBP 与标准 BP 的信念差有界 | 提供"只改局部"的**合法性界**；我们的优先队列边界即 EFBP 前沿 |
-| **AdaBP（I7）** | 按**查询相关子图**组织：只更新与当前 query 有关的部分；树/高斯情形精确 | 对应我们"只关心某条弧/某几对路径"的场景（可作二期） |
+| **EFBP（I7 Nath 2010）** | 按**受影响区域**组织"扩张前沿"：只在前沿推进，并证明 EFBP 与标准 BP 的信念差有界 | 提供"只改局部"的**合法性界**；我们的优先队列边界即 EFBP 前沿 |
+| **AdaBP（I8）** | 按**查询相关子图**组织：只更新与当前 query 有关的部分；树/高斯情形精确 | 对应我们"只关心某条弧/某几对路径"的场景（可作二期） |
 | **Fan 2017（I13）** | 不按区域，而是给出增量算法的**可分析性判据**：localizable（代价由 ∆G 的 d-邻域决定）+ bounded relative（代价由 ∆G 与必然被检查区域的大小决定） | 给我们一个**理论表述模板**：把"我们的增量算法有效"写成"localizable + 相对批量有界"，而不是去证无法成立的严格 bounded（I13 明确指出图遍历/连通性等常见查询的增量问题是 unbounded 的） |
 | **Sutton §4（I2）** | 当**因子本身变化**（如参数更新）时，给出残差的初始化方法 | 直接对应我们的"权变/删边"触发器的残差初始化 |
 
-**推荐的融合表述（汇报用）**：*用区域给"初始优先级"，用残差给"动态优先级"*——初始化时只把 S₀ 及其 d-邻域以正残差入队（EFBP 思路，I10），随后完全由残差堆驱动（RBP 思路，I1），并用 Quiet 规则静默稳定区（I11）。
+**推荐的融合表述（汇报用）**：*用区域给"初始优先级"，用残差给"动态优先级"*——初始化时只把 S₀ 及其 d-邻域以正残差入队（EFBP 思路，I7），随后完全由残差堆驱动（RBP 思路，I1），并用 Quiet 规则静默稳定区（I6）。
 
 ### 3.4 档 C：结构/参数变化的六个触发器
 
@@ -420,15 +422,15 @@ w(e) → w(e) + Δw（e = (a, b)）。由 §2.3(1)：
 - 每次重算代价 O(deg(s)·log deg(s)) + O(deg(t)·log deg(t))，然后交给残差堆扩散
 - 边界：若 k > |OUT(s)| 或 k > |IN(t)|，实例不可行 → 应直接报不可行（T = +∞ 会传染，不要让它进入迭代）
 
-#### C-4 流式到达（I3 StreamBP）
+#### C-4 流式到达（I9 StreamBP）
 
-I3 的 StreamBP（Algorithm 1）规则：节点 v(t) 到达时，**(1)** 更新所有指向 v(t) 的消息，(2)**沿从 v(t) 出发的路径按距离递增**做 R 层更新（R-local）。每次到达的总更新数 O(R·deg)。其理论结论是：在流式随机块模型下 StreamBP 达到与离线 BP 相同的渐近精度，而每次到达只做常数级更新。
+I9 的 StreamBP（Algorithm 1）规则：节点 v(t) 到达时，**(1)** 更新所有指向 v(t) 的消息，(2)**沿从 v(t) 出发的路径按距离递增**做 R 层更新（R-local）。每次到达的总更新数 O(R·deg)。其理论结论是：在流式随机块模型下 StreamBP 达到与离线 BP 相同的渐近精度，而每次到达只做常数级更新。
 
 > 移植到 k-VDSP：把"第 t 个到达的顶点"视为触发 S₀ = {新点及其 R-邻域内半消息}，其余复用。这给出了**"每步 O(R) 次更新的实时重规划"**这一 anytime 卖点。
 
-#### C-5 预算受限 / 超大图（I9 LinBP/SBP）
+#### C-5 预算受限 / 超大图（I11 LinBP/SBP）
 
-I9 的 LinBP 把 BP 消息**线性化**成矩阵方程（闭式解、有收敛保证），SBP 则是"每条边至多传播一次"的局部版本，并明确支持**动态网络上的快速增量更新**。代价是牺牲精确性（只依赖最近的有标签邻居）。
+I11 的 LinBP 把 BP 消息**线性化**成矩阵方程（闭式解、有收敛保证），SBP 则是"每条边至多传播一次"的局部版本，并明确支持**动态网络上的快速增量更新**。代价是牺牲精确性（只依赖最近的有标签邻居）。
 
 > 移植：作为"预算受限模式"——当残差堆在给定时间预算内未清空时，用单遍线性化近似给出当前最优估计（anytime 输出），随后在后台继续跑精确的残差迭代。
 
@@ -477,13 +479,13 @@ while PQ 非空 and iters < ITER_MAX:
     old = delta[h]
     new = LOCAL_RULE(h)                  # §2.3：跨弧 / 内部 top-2 / 源汇 top-k
     r = |new − old|
-    if r <= eps: continue                # Quiet: 静默，不再入队（I11）
+    if r <= eps: continue                # Quiet: 静默，不再入队（I6）
     delta[h] = (1−λ)·old + λ·new         # 阻尼（λ=1 即无阻尼）
     iters += 1
     # 只把"真正受影响的"邻居重新入队（Quiet 的入版本号判据）
     for h' in AFFECTED_BY(h):
         if version_stale(h'): PQ.push(h', EST_RESIDUAL(h'))   # I2 的残差估计
-    if 振荡检测触发: 应用噪声 或 δ ← γ·δ                     # I5
+    if 振荡检测触发: 应用噪声 或 δ ← γ·δ                     # I4
 
 # ---------- 5. 解码 ----------
 for e = (i,j) in E: Δ[e] = w[e] + delta[i→e] + delta[j→e]
@@ -516,8 +518,8 @@ CACHE ← {delta, IN_sorted, OUT_sorted, top3}   # 供下一次变化热启动
 
 1. **惰性删除**：删弧后不立即从有序表物理删除，而是打删除标记 + 版本号；达到阈值（如删除占比 > 30%）再重建。
 2. **BIG 溢出**：用 BIG = 1e15 代替 +∞；只要一条 δ = BIG，任何包含它的加法都可能溢出 ⇒ 在 T(·)/pᵢₙ 计算中先做"可行性短路"（若 k > 可用弧数直接判不可行）。
-3. **静默消息的唤醒**：Quiet 剪枝必须维护"入消息版本号"，否则会漏更新（I11 的正确性依赖"入消息未变"这一事实）。
-4. **权重衰减的收尾**：I5 的权重衰减会留下小偏差，建议收敛后关掉衰减、再跑若干轮纯残差迭代。
+3. **静默消息的唤醒**：Quiet 剪枝必须维护"入消息版本号"，否则会漏更新（I6 的正确性依赖"入消息未变"这一事实）。
+4. **权重衰减的收尾**：I4 的权重衰减会留下小偏差，建议收敛后关掉衰减、再跑若干轮纯残差迭代。
 5. **数值归一化**：每若干轮对全体 δ 减去公共均值（§2.2 的 gauge 自由度允许这么做），防止量级漂移。
 6. **s/t 的 k 边界**：重建缓存后**先**检查 deg 与 k 的关系，再进入迭代。
 
@@ -528,16 +530,16 @@ CACHE ← {delta, IN_sorted, OUT_sorted, top3}   # 供下一次变化热启动
 | 残差定义与优先队列 | **I1** Elidan 2006 | "RBP: schedules messages in an informed way, that pushes down a bound on the distance from the fixed point"；并证明任何合理异步 BP 收敛到唯一不动点 |
 | 残差不必真算 | **I2** Sutton 2007 | "estimating the residual, rather than calculating it directly… upper bound based on recent work on message errors"；RBP0L 比 RBP1L 快至 5 倍 |
 | 因子变化时的残差初始化 | **I2** §4 | "a method for estimating the message residual when the factors themselves change" |
-| 残差调度先例（译码） | **I8** Casado 2008 | r(mₖ) = ‖fₖ(m) − mₖ‖；informed dynamic scheduling 显著少于标准顺序调度，且不增加单轮复杂度 |
-| 振荡处理 | **I5** Knoll 2015 | 观察到"局部振荡导致同一序列消息被反复更新"时 RBP 失败；提出加噪声与权重衰减两方案 |
-| 并行化 | **I6** Gonzalez 2009 | 证明完全同步并行是渐近低效的；residual splash 达到最优并行性能 |
-| 已收敛消息跳过 | **I11** Fujiwara 2015 | "dynamically detects converged messages to skip unnecessary updates… theoretically guarantees to output the same results as the standard approach" |
-| 局部区域传播 + 误差界 | **I10** Nath 2010 | EFBP："messages are only propagated in regions of the network affected by the changes"；给出信念差界的理论保证 |
-| 自适应/查询相关子图 | **I7** Papachristoudis 2018 | AdaBP：树与高斯 MRF 上精确；避免"在整图上传播不需要的消息" |
+| 残差调度先例（译码） | **I3** Casado 2008 | r(mₖ) = ‖fₖ(m) − mₖ‖；informed dynamic scheduling 显著少于标准顺序调度，且不增加单轮复杂度 |
+| 振荡处理 | **I4** Knoll 2015 | 观察到"局部振荡导致同一序列消息被反复更新"时 RBP 失败；提出加噪声与权重衰减两方案 |
+| 并行化 | **I5** Gonzalez 2009 | 证明完全同步并行是渐近低效的；residual splash 达到最优并行性能 |
+| 已收敛消息跳过 | **I6** Fujiwara 2015 | "dynamically detects converged messages to skip unnecessary updates… theoretically guarantees to output the same results as the standard approach" |
+| 局部区域传播 + 误差界 | **I7** Nath 2010 | EFBP："messages are only propagated in regions of the network affected by the changes"；给出信念差界的理论保证 |
+| 自适应/查询相关子图 | **I8** Papachristoudis 2018 | AdaBP：树与高斯 MRF 上精确；避免"在整图上传播不需要的消息" |
 | 增量可分析性判据 | **I13** Fan 2017 | 提出 localizable 与 bounded relative 作为"可做性"判据，替代过强的 bounded |
-| 流式到达、有限更新 | **I3** Wu 2021 | StreamBP Algorithm 1：每次到达只更新入边与沿 R 层出路径的消息；达到与离线 BP 相同渐近精度 |
-| 滑动窗口 + 丢弃信息编码 | **I4** Singh 2021 | SW-SBP：窗口长 K + 在窗首加一个节点承载历史信息（两种设置：给定边缘分布 / 引入先验势） |
-| 单遍线性化增量 | **I9** Gatterbauer 2015 | LinBP 线性化给闭式解与收敛保证；SBP 每条边至多传播一次，"allows fast incremental updates in dynamic networks" |
+| 流式到达、有限更新 | **I9** Wu 2021 | StreamBP Algorithm 1：每次到达只更新入边与沿 R 层出路径的消息；达到与离线 BP 相同渐近精度 |
+| 滑动窗口 + 丢弃信息编码 | **I10** Singh 2021 | SW-SBP：窗口长 K + 在窗首加一个节点承载历史信息（两种设置：给定边缘分布 / 引入先验势） |
+| 单遍线性化增量 | **I11** Gatterbauer 2015 | LinBP 线性化给闭式解与收敛保证；SBP 每条边至多传播一次，"allows fast incremental updates in dynamic networks" |
 | 增量因子图求解器 | **I12** Qadri 2023 | 前代/回代 = Bayes 树的上行/下行 pass；fluid/online relinearization 免去周期性批量重线性化 |
 | f 变化只影响 s/t | **P22** §II-A + §V | 内部顶点局部约束不含 f；多源/多汇只改 f 的定义 |
 | 调度不改变不动点 | **#2** Aji&McEliece | 广义分配律的调度定理：消息传递完成 ⟺ 存在传播路径 |
@@ -572,7 +574,7 @@ CACHE ← {delta, IN_sorted, OUT_sorted, top3}   # 供下一次变化热启动
 
 **命题 B3（摊销）**：若连续 T 次局部变化，则总量约为 O(T · |S₀| · degʳ)，而批量重解为 O(T · m)。这正是"动态图实时重解"场景的卖点（对应 P22 §VI 强调的"分布式、易并行"）。
 
-**与 I3 的对齐**：I3 StreamBP 给出了"每次到达只做 O(R) 次更新且渐近精度不降"的严格结论。我们的 C-4 触发器是该结论在 k-VDSP 上的移植（R 层邻域 = R-local），可作为理论部分的对照引文。
+**与 I9 的对齐**：I9 StreamBP 给出了"每次到达只做 O(R) 次更新且渐近精度不降"的严格结论。我们的 C-4 触发器是该结论在 k-VDSP 上的移植（R 层邻域 = R-local），可作为理论部分的对照引文。
 
 ### 4.3 三个风险与对策
 
@@ -580,9 +582,9 @@ CACHE ← {delta, IN_sorted, OUT_sorted, top3}   # 供下一次变化热启动
 |---|---|---|---|
 | **唯一性假设不成立** | 多最优解时 BP 可能振荡或落到不同不动点 | (a) 对权重加极小微扰打破对称（Isolation Lemma 思想）；(b) 报告"不唯一率" | #16/#17 Gamarnik 2012（FPRAS 用隔离引理保证唯一性）；P22 定理前提 |
 | **假不动点** | 残差全为 0（δ 不变）但解码不是最优——异步调度停在"局部稳定点" | 安全网：周期性同步全扫 + 唯一性检测；把"解码不可行"当作继续迭代的信号 | #16 推论 5.2（整数数据跑 n²cₘₐₓ+n 轮可用信念差检测唯一性） |
-| **振荡 / 数值漂移** | 有环图上残差调度反复更新同一序列；δ 量级随迭代增长 | λ 阻尼 + I5 的噪声/权重衰减 + 每若干轮整体平移归一化（利用 §2.2 的 gauge 自由度） | I5 Knoll 2015；I1 Elidan 2006 |
+| **振荡 / 数值漂移** | 有环图上残差调度反复更新同一序列；δ 量级随迭代增长 | λ 阻尼 + I4 的噪声/权重衰减 + 每若干轮整体平移归一化（利用 §2.2 的 gauge 自由度） | I4 Knoll 2015；I1 Elidan 2006 |
 
-**补充风险（必须向导师明说）**：RBP 在**一般图（带环）**上没有普遍的收敛保证，I5 明确报告了 RBP 在局部振荡下失败的情形。因此本方案的收敛保证来自"**档 A + 周期性同步兜底**"的组合，而不是单靠 RBP。
+**补充风险（必须向导师明说）**：RBP 在**一般图（带环）**上没有普遍的收敛保证，I4 明确报告了 RBP 在局部振荡下失败的情形。因此本方案的收敛保证来自"**档 A + 周期性同步兜底**"的组合，而不是单靠 RBP。
 
 ### 4.4 正确性验证（三重）
 
@@ -639,10 +641,10 @@ CACHE ← {delta, IN_sorted, OUT_sorted, top3}   # 供下一次变化热启动
 | 消融项 | 对比 |
 |---|---|
 | 阻尼 λ | 0.5 / 1.0 / 自适应 |
-| 调度 | 同步 vs RBP（I1） vs RBP + Quiet（I11） |
+| 调度 | 同步 vs RBP（I1） vs RBP + Quiet（I6） |
 | 初值 | 零初始化（P22） vs 热启动（档 B） |
 | 残差获取 | 真算（RBP1L） vs 估计（RBP0L, I2） |
-| 并行 | 单线程 vs residual splash（I6） |
+| 并行 | 单线程 vs residual splash（I5） |
 
 ### 5.6 延伸：真正 NP-难的变体（决定论文档位）
 
@@ -679,16 +681,16 @@ CACHE ← {delta, IN_sorted, OUT_sorted, top3}   # 供下一次变化热启动
 | 16 | 残差定义 + 优先队列 | **I1** Elidan 2006 | r = ‖m(new) − m(old)‖；优先队列；异步收敛到唯一不动点 | 档 A 主循环 |
 | 17 | 残差估计（省白算） | **I2** Sutton 2007 §3 | 残差上界由入消息残差估计；RBP0L | 档 A 加速变体 1 |
 | 18 | 参数变化时的残差初始化 | **I2** §4 | 因子变化时初始化残差估计 | 档 B 触发器 |
-| 19 | 振荡抑制 | **I5** Knoll 2015 | 噪声注入 / 权重衰减 | 档 A 稳定化 |
-| 20 | 并行分组 | **I6** Gonzalez 2009 | residual splash，最优并行 | 档 A 并行 |
-| 21 | 静默剪枝 | **I11** Fujiwara 2015 | 检测已收敛消息直接跳过，输出与标准一致 | 档 A 剪枝 |
-| 22 | 译码中的残差调度先例 | **I8** Casado 2008 式(3) | r(mₖ) = ‖fₖ(m) − mₖ‖ | 档 A 的实证支撑 |
-| 23 | warm start + 局部区域传播 + 误差界 | **I10** Nath 2010 EFBP | expanding frontier；信念差界 | 档 B 核心 |
-| 24 | 查询相关子图更新 | **I7** Papachristoudis 2018 AdaBP | 自适应设置；树/高斯精确 | 档 B 二期 |
+| 19 | 振荡抑制 | **I4** Knoll 2015 | 噪声注入 / 权重衰减 | 档 A 稳定化 |
+| 20 | 并行分组 | **I5** Gonzalez 2009 | residual splash，最优并行 | 档 A 并行 |
+| 21 | 静默剪枝 | **I6** Fujiwara 2015 | 检测已收敛消息直接跳过，输出与标准一致 | 档 A 剪枝 |
+| 22 | 译码中的残差调度先例 | **I3** Casado 2008 式(3) | r(mₖ) = ‖fₖ(m) − mₖ‖ | 档 A 的实证支撑 |
+| 23 | warm start + 局部区域传播 + 误差界 | **I7** Nath 2010 EFBP | expanding frontier；信念差界 | 档 B 核心 |
+| 24 | 查询相关子图更新 | **I8** Papachristoudis 2018 AdaBP | 自适应设置；树/高斯精确 | 档 B 二期 |
 | 25 | 增量可分析性判据 | **I13** Fan 2017 | localizable / bounded relative；许多查询 unbounded | §4.2 的表述模板 |
-| 26 | 流式有限更新 | **I3** Wu 2021 StreamBP Alg.1 | 每次到达 O(R) 更新；渐近精度不降 | 档 C-4 |
-| 27 | 滑动窗口 + 历史编码 | **I4** Singh 2021 SW-SBP | 窗口 K + 窗首节点承载被丢弃观测 | 档 C-4 备选 |
-| 28 | 单遍线性化增量 | **I9** Gatterbauer 2015 LinBP/SBP | 线性化闭式解；每条边至多一次；动态网络增量更新 | 档 C-5 预算模式 |
+| 26 | 流式有限更新 | **I9** Wu 2021 StreamBP Alg.1 | 每次到达 O(R) 更新；渐近精度不降 | 档 C-4 |
+| 27 | 滑动窗口 + 历史编码 | **I10** Singh 2021 SW-SBP | 窗口 K + 窗首节点承载被丢弃观测 | 档 C-4 备选 |
+| 28 | 单遍线性化增量 | **I11** Gatterbauer 2015 LinBP/SBP | 线性化闭式解；每条边至多一次；动态网络增量更新 | 档 C-5 预算模式 |
 | 29 | 增量因子图求解器 | **I12** Qadri 2023 InCOpt | Bayes 树上行/下行 pass；fluid relinearization | 档 C-6 二期 |
 | 30 | 唯一性检测 | **#16** Gamarnik 2012 推论 5.2 | 整数数据跑 n²cₘₐₓ+n 轮可检测唯一性 | §4.3 假不动点对策 |
 | 31 | 隔离引理扰动 | **#16/#17** Gamarnik 2012 §8（FPRAS） | decimation + isolation lemma | §4.3 打破多最优对称 |

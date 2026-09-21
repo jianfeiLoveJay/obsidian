@@ -10,7 +10,7 @@ base_paper: (9)2022[Dai, Guo, ..] - Iterative message passing alg for vertex dis
 # k-VDSP 增量式 BP：实现思路
 
 > 目标：在 Dai 2022（k-VDSP，第 22 篇）的 Min-Sum BP 框架上，叠加增量式机制——图/参数发生局部变化时复用旧消息，避免从零重跑。
-> 依赖论文：[[增量式BP/(1)2006[Elidan, ..] - Residual Belief Propagation Informed Scheduling for Asynchronous Message Passing.pdf|RBP(2006)]]、[[增量式BP/(2)2007[Sutton, ..] - Improved Dynamic Schedules for Belief Propagation.pdf|动态调度(2007)]]、[[增量式BP/(9)2015[Gatterbauer, ..] - Linearized and Single-Pass Belief Propagation.pdf|单遍线性化(2015)]]、[[增量式BP/(10)2010[Nath, ..] - Efficient Belief Propagation for Utility Maximization and Repeated Inference.pdf|EFBP 重复推理复用(2010)]]、[[增量式BP/(3)2021[Wu, ..] - Streaming Belief Propagation for Community Detection.pdf|流式 BP(2021)]]。
+> 依赖论文：[[增量式BP/(1)2006[Elidan, ..] - Residual Belief Propagation Informed Scheduling for Asynchronous Message Passing.pdf|RBP(2006)]]、[[增量式BP/(2)2007[Sutton, ..] - Improved Dynamic Schedules for Belief Propagation.pdf|动态调度(2007)]]、[[增量式BP/(11)2015[Gatterbauer, ..] - Linearized and Single-Pass Belief Propagation.pdf|单遍线性化(2015)]]、[[增量式BP/(7)2010[Nath, ..] - Efficient Belief Propagation for Utility Maximization and Repeated Inference.pdf|EFBP 重复推理复用(2010)]]、[[增量式BP/(9)2021[Wu, ..] - Streaming Belief Propagation for Community Detection.pdf|流式 BP(2021)]]。
 
 ## 1. 问题与基线（Dai 2022）速览
 
