@@ -1,4 +1,4 @@
-﻿---
+---
 title: k-VDSP 增量式 BP 实现思路
 date: 2026-09-10
 tags: [research, belief-propagation, 增量式BP, k-VDSP, 实现]
